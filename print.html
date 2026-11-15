@@ -41,7 +41,7 @@
   <div class="ph2"><div><p class="eyebrow">Basket printout</p><h1>Idea <span>Basket</span></h1><p id="sub"></p></div>
   <div class="acts noprint"><button class="btn pri" type="button" id="pr">Print / PDF</button><a class="btn" href="en.html">Back to the Idea Basket</a></div></div>
   <div id="list"></div>
-  <p class="pf">Sakarya Teknokent · Idea Basket · https://saufikirsepeti.netlify.app/en.html</p>
+  <p class="pf">Sakarya Teknokent · Idea Basket · https://fikir-sepeti-site.pages.dev/en.html</p>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -53,7 +53,7 @@
 <script>
 Gate.start(document.documentElement.lang==='en'?'en':'tr',function(cn){SEED.ideas=cn.ideas||[];SEED.paths=cn.paths||[];Gate.open();
 (function(){
-  var C={"loc": "en-GB", "dir": "idea/", "site": "https://saufikirsepeti.netlify.app/", "home": "en.html", "effort": " effort", "goal": "Goal", "first": "First step", "kp": "Key measure", "tn": false, "sub": "{n} ideas I picked", "empty": "Your basket is empty. Mark the ideas that interest you in the Idea Basket and try again."}, I=SEED.ideas, byId={}; I.forEach(function(i){byId[i.id]=i});
+  var C={"loc": "en-GB", "dir": "idea/", "site": "https://fikir-sepeti-site.pages.dev/", "home": "en.html", "effort": " effort", "goal": "Goal", "first": "First step", "kp": "Key measure", "tn": false, "sub": "{n} ideas I picked", "empty": "Your basket is empty. Mark the ideas that interest you in the Idea Basket and try again."}, I=SEED.ideas, byId={}; I.forEach(function(i){byId[i.id]=i});
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   var ids=[], h=location.hash.replace('#','');
   if(/^s-[\d-]+$/.test(h)) ids=h.slice(2).split('-').map(Number);
