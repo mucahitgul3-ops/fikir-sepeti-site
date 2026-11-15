@@ -1,0 +1,26 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fikir Sepeti · Kurulum</title>
+<style>body{font:16px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 20px;color:#1a1c3a}h1{font-size:28px}h2{font-size:20px;margin-top:32px}code{background:#eef0fa;padding:2px 6px;border-radius:4px}li{margin:6px 0}.n{color:#555;font-size:14.5px}</style></head><body>
+<h1>Fikir Sepeti sitesi: kurulum</h1>
+<p>Bu klasör sitenin tamamıdır. <code>index.html</code> herkesin gördüğü sayfa, <code>admin.html</code> yönetici sayfasıdır. <code>config.js</code> boş kaldığı sürece site deneme modunda çalışır.</p>
+<h2>1. Firebase projesi (veritabanı ve giriş)</h2>
+<ol>
+<li><b>console.firebase.google.com</b> adresinde Google hesabınızla “Proje ekle” deyin. Ad: <code>fikir-sepeti</code>. Google Analytics'i kapatabilirsiniz.</li>
+<li>Soldaki menüden <b>Firestore Database</b> → “Veritabanı oluştur”. Konum olarak Avrupa'yı (<code>eur3</code>) seçin, “üretim modunda” başlatın.</li>
+<li>Firestore'da <b>Kurallar</b> sekmesini açın. Bu klasördeki <code>firestore.rules</code> dosyasının içeriğini yapıştırın, <code>YONETICI-EPOSTANIZ</code> yerine yönetici e-postanızı yazın ve “Yayınla” deyin.</li>
+<li>Soldaki menüden <b>Authentication</b> → “Başlayın” → “Oturum açma yöntemi” → <b>E-posta/Parola</b>'yı etkinleştirin.</li>
+<li>Authentication'da <b>Kullanıcılar</b> sekmesi → “Kullanıcı ekle”. Kurallara yazdığınız e-postayı ve güçlü bir parola girin. Bu, yönetici girişinizdir.</li>
+<li>Sol üstteki dişli → <b>Proje ayarları</b> → “Uygulamalarınız” → web simgesi (<code>&lt;/&gt;</code>). Bir takma ad verip kaydedin. Ekrana gelen <code>firebaseConfig</code> değerlerini <code>config.js</code> dosyasındaki <code>null</code> yerine yapıştırın.</li>
+</ol>
+<h2>2. Siteyi yayına alma</h2>
+<ol>
+<li><b>app.netlify.com/drop</b> adresini açın ve bu klasörü sayfaya sürükleyin.</li>
+<li>Sitenin kalıcı olması için ücretsiz bir Netlify hesabı açın ve siteyi sahiplenin.</li>
+<li>“Site configuration” → “Change site name” ile adresi değiştirin, örneğin <code>fikirsepeti.netlify.app</code>.</li>
+</ol>
+<h2>3. İlk giriş</h2>
+<ol>
+<li>Sitenizin adresinin sonuna <code>/admin.html</code> ekleyin ve giriş yapın.</li>
+<li>“Fikirler” sekmesinde “Başlangıç listesini yükle” düğmesine basın. Fikirler veritabanına aktarılır; artık düzenleyebilirsiniz.</li>
+</ol>
+<p class="n">Dosyalarda bir şey değiştirdiğinizde klasörü Netlify'da sitenizin “Deploys” sayfasına yeniden sürüklemeniz yeterlidir. Veritabanındaki fikirler ve sepetler bundan etkilenmez.</p>
+</body></html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Basket printout · Idea Basket</title>
+<meta name="robots" content="noindex, nofollow">
+<script>document.documentElement.classList.add("gated")</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0C24'/%3E%3Cpath d='M14 26h36l-4 24H18z' fill='none' stroke='%232EA8D3' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M24 26l8-12 8 12' fill='none' stroke='%23EEF0FA' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+.pw{max-width:900px;margin:0 auto;padding-block:28px 60px;display:flex;flex-direction:column;gap:18px}
+.ph2{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+.ph2 h1{font-size:clamp(30px,5vw,44px)}
+#sub{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px}
+.it{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;border-bottom:1px solid var(--line);padding-bottom:16px;break-inside:avoid}
+.it .no{width:36px;height:36px;border-radius:10px;border:1px solid var(--sky);color:var(--sky);display:grid;place-items:center;font-family:var(--mono)}
+.it h2{font-size:22px}
+.it .tn{margin-top:2px;display:block}
+.it .o{color:var(--muted);margin:6px 0 8px}
+.it dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin-top:10px;font-size:14px}
+.it dt{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);padding-top:2px}
+.it dd{margin:0}
+.it .u{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.pf{font-size:12.5px;color:var(--muted)}
+@media print{
+  :root{--bg:#fff;--fg:#111;--muted:#3a3a3a;--sky:#0B6E94;--surface:#fff;--surface2:#fff;--line:#d0d4dc;--line2:#b8bdc8;--skysoft:transparent;color-scheme:light}
+  @page{size:A4;margin:13mm 14mm}
+  html{background:#fff!important}
+  body{background:#fff!important;background-image:none!important;font-size:10.5pt}
+  .noprint{display:none!important}
+  .pw{padding:0;gap:10px;max-width:none}
+  .it h2{font-size:14pt}
+  .pill{white-space:normal}
+}
+</style>
+</head>
+<body>
+<main class="pw gut">
+  <div class="ph2"><div><p class="eyebrow">Basket printout</p><h1>Idea <span>Basket</span></h1><p id="sub"></p></div>
+  <div class="acts noprint"><button class="btn pri" type="button" id="pr">Print / PDF</button><a class="btn" href="en.html">Back to the Idea Basket</a></div></div>
+  <div id="list"></div>
+  <p class="pf">Sakarya Teknokent · Idea Basket · https://saufikirsepeti.netlify.app/en.html</p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script src="seed_en.js"></script>
+<script src="store.js"></script>
+<script src="gate.js"></script>
+<script>
+Gate.start(document.documentElement.lang==='en'?'en':'tr',function(cn){SEED.ideas=cn.ideas||[];SEED.paths=cn.paths||[];Gate.open();
+(function(){
+  var C={"loc": "en-GB", "dir": "idea/", "site": "https://saufikirsepeti.netlify.app/", "home": "en.html", "effort": " effort", "goal": "Goal", "first": "First step", "kp": "Key measure", "tn": false, "sub": "{n} ideas I picked", "empty": "Your basket is empty. Mark the ideas that interest you in the Idea Basket and try again."}, I=SEED.ideas, byId={}; I.forEach(function(i){byId[i.id]=i});
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  var ids=[], h=location.hash.replace('#','');
+  if(/^s-[\d-]+$/.test(h)) ids=h.slice(2).split('-').map(Number);
+  else { try{ids=JSON.parse(localStorage.getItem('fs-basket')||'[]')}catch(e){} }
+  ids=ids.filter(function(x){return byId[x]});
+  var d=new Date(), ds=d.toLocaleDateString(C.loc,{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('sub').textContent=ids.length?(C.sub.replace('{n}',ids.length)+' · '+ds):'';
+  if(!ids.length){document.getElementById('list').innerHTML='<p class="empty">'+C.empty+'</p>';return}
+  document.getElementById('list').innerHTML=ids.map(function(id,x){var i=byId[id];
+    return '<article class="it"><div class="no">'+(x+1)+'</div><div class="bd"><p class="eyebrow">'+esc(SEED.F[i.f])+'</p><h2>'+esc(i.n)+'</h2>'+(i.t&&C.tn?'<span class="tn">'+esc(i.t)+'</span>':'')+
+      '<p class="o">'+esc(i.o)+'</p><div class="pills"><span class="pill e'+i.e+'">'+esc(SEED.E[i.e])+C.effort+'</span><span class="pill">'+esc(SEED.D[i.d])+'</span><span class="pill">'+esc(SEED.B[i.b]||'')+'</span></div>'+
+      '<dl>'+(i.g?'<dt>'+C.goal+'</dt><dd>'+esc(i.g)+'</dd>':'')+(i.fs?'<dt>'+C.first+'</dt><dd>'+esc(i.fs)+'</dd>':'')+(i.kp?'<dt>'+C.kp+'</dt><dd>'+esc(i.kp)+'</dd>':'')+'</dl>'+
+      '<span class="u">'+C.site+C.home+'#f-'+i.id+'</span></div></article>'}).join('');
+  document.getElementById('pr').addEventListener('click',function(){window.print()});
+})();
+});
+</script>
+</body>
+</html>

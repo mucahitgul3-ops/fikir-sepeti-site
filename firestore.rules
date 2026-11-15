@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Yönetici e-postaları. Kendi adresinizi yazın; birden fazla kişi için virgülle ekleyin:
+    // ['ad@ornek.com', 'ikinci@ornek.com']
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email in ['YONETICI-EPOSTANIZ'];
+    }
+
+    // Site üyeliği: sakarya.edu.tr adresi ya da yöneticinin davet ettiği adres (doğrulanmış e-posta ile giriş).
+    function email() { return request.auth.token.email.lower(); }
+    function verified() { return request.auth != null && request.auth.token.email != null && request.auth.token.email_verified == true; }
+    function member() {
+      return isAdmin() || (verified() && (email().matches('.*@sakarya[.]edu[.]tr')
+        || exists(/databases/$(database)/documents/davetli/$(email()))));
+    }
+
+    // Fikir içeriği: yalnızca üyeler okur, yalnızca yönetici yükler.
+    match /icerik/{lang} {
+      allow read: if member();
+      allow write: if isAdmin();
+    }
+
+    // Davetliler: yönetici yönetir; kişi yalnızca kendi davetini görebilir.
+    match /davetli/{adres} {
+      allow read: if isAdmin() || (verified() && email() == adres);
+      allow write: if isAdmin();
+    }
+
+    // Fikir düzenlemeleri ve durumlar: yalnızca üyeler okur, yalnızca yönetici değiştirir.
+    match /ideas/{id} {
+      allow read: if member();
+      allow write: if isAdmin();
+    }
+
+    // Sepetler: üyeler yalnızca yeni sepet gönderebilir; okumak, işaretlemek ve silmek yöneticiye aittir.
+    match /sepetler/{id} {
+      allow create: if member() && request.resource.data.keys().hasOnly(['ids', 'names', 'birim', 'ad', 'not', 'done', 'ts'])
+        && request.resource.data.ids is list
+        && request.resource.data.ids.size() > 0
+        && request.resource.data.ids.size() <= 200
+        && request.resource.data.names is list
+        && request.resource.data.names.size() <= 200
+        && request.resource.data.ad is string
+        && request.resource.data.ad.size() <= 120
+        && request.resource.data.not is string
+        && request.resource.data.not.size() <= 600
+        && (!('birim' in request.resource.data) || (request.resource.data.birim is string && request.resource.data.birim.size() <= 20))
+        && request.resource.data.done == false
+        && request.resource.data.ts == request.time;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Fikir önerileri: üyeler yalnızca yeni öneri gönderebilir; okumak, işaretlemek ve silmek yöneticiye aittir.
+    match /oneriler/{id} {
+      allow create: if member() && request.resource.data.keys().hasOnly(['baslik', 'aciklama', 'birim', 'ad', 'done', 'ts'])
+        && request.resource.data.baslik is string && request.resource.data.baslik.size() > 0 && request.resource.data.baslik.size() <= 80
+        && request.resource.data.aciklama is string && request.resource.data.aciklama.size() > 0 && request.resource.data.aciklama.size() <= 900
+        && request.resource.data.birim is string && request.resource.data.birim.size() <= 20
+        && request.resource.data.ad is string && request.resource.data.ad.size() <= 120
+        && request.resource.data.done == false
+        && request.resource.data.ts == request.time;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // İsimsiz ilgi sayacı: üyeler yalnızca bir artırabilir; okumak ve sıfırlamak yöneticiye aittir.
+    function step(n, o) { return n is int && n >= o && n <= o + 1; }
+    match /ilgi/{id} {
+      allow create: if member() && request.resource.data.keys().hasOnly(['ac', 'is'])
+        && step(request.resource.data.get('ac', 0), 0) && step(request.resource.data.get('is', 0), 0);
+      allow update: if member() && request.resource.data.keys().hasOnly(['ac', 'is'])
+        && step(request.resource.data.get('ac', 0), resource.data.get('ac', 0))
+        && step(request.resource.data.get('is', 0), resource.data.get('is', 0));
+      allow read, delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fikir Sepeti · Sakarya Teknokent</title>
+<meta name="description" content="Sakarya Teknokent'in üniversite, sanayi ve öğrenciler için hazırladığı program ve etkinlik fikirleri. Gezin, ilginizi çekenleri sepetinize ekleyin ve paylaşın.">
+<meta name="theme-color" content="#0A0C24">
+<meta name="robots" content="noindex, nofollow">
+<script>document.documentElement.classList.add("gated");try{if(localStorage.getItem("fs-theme")==="light")document.documentElement.setAttribute("data-fs","light")}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fikir Sepeti">
+<meta property="og:title" content="Fikir Sepeti · Sakarya Teknokent">
+<meta property="og:description" content="Üniversite, sanayi ve öğrenciler için 105 program ve etkinlik fikri. Gezin, ilginizi çekenleri seçin, paylaşın.">
+<meta property="og:url" content="https://saufikirsepeti.netlify.app/">
+<meta property="og:image" content="https://saufikirsepeti.netlify.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0C24'/%3E%3Cpath d='M14 26h36l-4 24H18z' fill='none' stroke='%232EA8D3' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M24 26l8-12 8 12' fill='none' stroke='%23EEF0FA' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fikir Sepeti">
+<link rel="alternate" hreflang="tr" href="https://saufikirsepeti.netlify.app/">
+<link rel="alternate" hreflang="en" href="https://saufikirsepeti.netlify.app/en.html">
+<link rel="alternate" hreflang="x-default" href="https://saufikirsepeti.netlify.app/">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<div class="ldbar" id="ldbar" aria-hidden="true"></div>
+<noscript><p style="margin:0;padding:14px 18px;background:var(--surface2);border-bottom:1px solid var(--line2);font-weight:600">Bu sayfa çalışmak için JavaScript gerektirir. Tarayıcınızda JavaScript’i açıp sayfayı yenileyin.</p></noscript>
+<a class="skip" id="skip" href="#genel">İçeriğe geç</a>
+<div class="demo" id="demo" hidden>Deneme modu: veritabanı bağlı değil. Gönderilen sepetler yalnızca bu tarayıcıda saklanır.</div>
+<div class="bar"><div class="in gut">
+  <a class="brand" href="#genel" data-go="genel" title="Ana sayfa">Fikir <span>Sepeti</span></a>
+  <label class="bsearch"><span class="sr">Fikir ara</span><input id="gq" type="search" placeholder="Fikir ara: öğrenci, 2209, batarya…" autocomplete="off"><kbd>/</kbd></label>
+  <div class="bact"><button class="lang" id="theme" type="button" aria-label="Açık temaya geç" title="Açık temaya geç">☀</button><a class="lang" id="lang" href="en.html" hreflang="en" lang="en" title="English version">EN</a><button class="btn pri" id="open-basket" type="button">Sepetim <span class="ct" id="ct">0</span></button></div>
+</div></div>
+
+<div class="shell gut">
+<nav class="side" id="side" aria-label="Fikir Sepeti bölümleri"></nav>
+<div class="wrap" id="icerik">
+
+<header class="hero" id="genel" data-view="genel">
+  <p class="eyebrow">Sakarya Teknokent · Fikir dosyası</p>
+  <h1>Fikir <span>Sepeti</span></h1>
+  <p class="lead">Teknokent, üniversite ve sanayi için hazırlanmış program ve etkinlik fikirleri tek rafta. Gezin, ilginizi çekenleri işaretleyin, seçtiklerinizi tek dokunuşla paylaşın.</p>
+  <div class="who" id="who" role="group" aria-label="Size uygun fikirleri gösterin"><span>Siz kimsiniz?</span>
+    <button class="btn sm" type="button" data-who="a">Akademisyenim</button>
+    <button class="btn sm" type="button" data-who="o">Öğrenciyim</button>
+    <button class="btn sm" type="button" data-who="s">Sanayiciyim</button>
+    <button class="btn sm" type="button" data-who="f">Teknokent firmasıyım</button>
+    <button class="btn sm" type="button" data-who="g">Girişimciyim</button>
+    <button class="btn sm" type="button" data-who="e">Teknokent ekibindenim</button>
+  </div>
+  <div class="cta"><button class="btn pri" type="button" data-go="raf">Tüm fikirlere göz atın →</button><button class="btn" type="button" data-go="oncelik">Öncelik haritası</button></div>
+  <div class="stats">
+    <button type="button" class="stat" data-stat="all"><b id="s-all">0</b><span>fikir</span></button>
+    <button type="button" class="stat" data-stat="low"><b id="s-low">0</b><span>düşük eforlu</span></button>
+    <button type="button" class="stat" data-stat="build"><b id="s-build">0</b><span>var olanı geliştiren</span></button>
+    <button type="button" class="stat" data-stat="theme"><b id="s-theme">0</b><span>tema</span></button>
+    <button type="button" class="stat" data-stat="quick"><b id="s-quick">0</b><span>hızlı başlangıç</span></button>
+  </div>
+  <div class="how">
+    <div><b>Gezin</b>Soldaki menüden bir bölüm, tema ya da kitle seçin; ya da yukarıdan kim olduğunuzu seçin, size dokunan fikirler gelsin.</div>
+    <div><b>İşaretleyin</b>“İlgimi çekti” demek bir taahhüt değildir; yalnızca ilginizi gösterir.</div>
+    <div><b>Paylaşın</b>Sepetinizin özetini ve bağlantısını kopyalayıp iletin; gerisini birlikte konuşalım.</div>
+  </div>
+</header>
+
+<div class="share" id="shared" hidden>
+  <p id="shared-t"></p>
+  <div class="acts"><button class="btn pri sm" id="shared-add" type="button">Sepetime al</button><button class="btn sm" id="shared-x" type="button">Kapat</button></div>
+</div>
+
+<section id="one" data-view="genel">
+  <div class="head">
+    <p class="eyebrow">Önce bunlar</p>
+    <h2>Öne çıkan 10 fikir</h2>
+    <p class="note">Az hazırlıkla başlayıp diğer fikirlere zemin hazırlayan, öncelik haritasının ilk 10’u. Ayrıntısını görmek için birine dokunun.</p>
+  </div>
+  <ol class="feat" id="feat"></ol>
+</section>
+
+<section id="temalar" data-view="genel">
+  <div class="head">
+    <p class="eyebrow">Kategoriler</p>
+    <h2>Temalara göre fikirler</h2>
+    <p class="note">Bir temaya dokunun; o temadaki bütün fikirler açılır.</p>
+  </div>
+  <div class="tgrid" id="tgrid"></div>
+</section>
+
+<section id="yeni" data-view="genel">
+  <div class="head">
+    <p class="eyebrow">Son eklenenler</p>
+    <h2>Yeni fikirler</h2>
+    <p class="note">Dosyaya en son eklenen fikirler. Ayrıntısını görmek için birine dokunun.</p>
+  </div>
+  <div class="mini" id="yeni-list"></div>
+</section>
+
+<section id="degisim" data-view="genel" hidden>
+  <div class="head">
+    <p class="eyebrow">Güncellemeler</p>
+    <h2>Neler değişti?</h2>
+    <p class="note">Dosyaya eklenen fikirler, eklendikleri tarihle. Bir fikre dokunun, ayrıntısı açılsın.</p>
+  </div>
+  <div class="chg" id="chg"></div>
+</section>
+
+<section id="kesif" data-view="genel">
+  <div class="head">
+    <p class="eyebrow">Dosyanın içinde</p>
+    <h2>Diğer bölümler</h2>
+  </div>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section id="programlar" data-view="programlar">
+  <div class="head">
+    <p class="eyebrow">Yeni · Kasım 2026</p>
+    <h2>Sakarya Üniversitesi’ni büyüten dört program</h2>
+    <p class="note">Teknokent’ten çıkan, kazancı Sakarya Üniversitesi’nin YÖK, TÜBİTAK ve uluslararası göstergelerine yazılacak dört üniversite–sanayi programı. Üniversite bugün sanayi destekli projelerin bütçesinde Türkiye 1.si (₺713 milyon), sanayi projesi sayısında 4.; programlar bu gücü büyütmek için tasarlandı. <a href="programlar.html" target="_blank" rel="noopener">Program dosyasını açın →</a></p>
+  </div>
+  <div class="grid pg" id="pg-grid"></div>
+</section>
+
+<section id="live" data-view="genel" hidden>
+  <div class="head">
+    <p class="eyebrow">Hayata geçenler</p>
+    <h2>Başlayan fikirler</h2>
+    <p class="note">Bir birimin sahiplendiği ya da başlattığı fikirler. Bir fikri siz de birlikte yürütmek isterseniz “İlgimi çekti” deyip sepetinizi gönderin.</p>
+  </div>
+  <div class="grid" id="live-grid"></div>
+</section>
+
+<section id="oncelik" data-view="oncelik">
+  <div class="head">
+    <p class="eyebrow">Önce hangisi?</p>
+    <h2>Öncelik haritası</h2>
+    <p class="note">Her fikir, Teknokent’in ve üniversitenin hedeflerine katkısına (etki) ve gerektirdiği hazırlığa göre dört gruptan birine yerleşti. İlk 10, az hazırlıkla başlayıp başka fikirlere de zemin hazırlayanlardır. Bu bir ön değerlendirmedir; birimlerle konuştukça değişir.</p>
+  </div>
+  <div class="prio">
+    <div class="vc"><h3>İlk 10</h3><ol class="top10" id="top10"></ol><div class="acts"><button class="btn sm pri" id="top-all" type="button">İlk 10’un hepsi ilgimi çekti</button></div></div>
+    <div class="blk" style="gap:12px">
+      <div class="vc"><h3>Etki ve hazırlık</h3><div class="quad" id="quad"></div><p class="note">Bir kutuya dokunun; raf o gruba göre süzülür.</p></div>
+      <div class="vc"><h3>Hangi hedefe hizmet ediyor?</h3><div class="bars" id="v-h"></div><p class="note">Bir fikir birden fazla hedefe hizmet edebilir.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="tubitak" data-view="tubitak">
+  <div class="head">
+    <p class="eyebrow">TÜBİTAK nezdinde</p>
+    <h2>Fikirler TÜBİTAK endeksinde nereye yazılır?</h2>
+    <p class="note">TÜBİTAK’ın Girişimci ve Yenilikçi Üniversite Endeksi üniversiteleri dört boyutta, 23 göstergeyle ölçüyor. Çıktısı bir göstergede doğrudan sayılabilen fikir o göstergeye eşlendi. Teknokent içi topluluk fikirleri dolaylı katkı sağladığı için eşlenmedi. Bir göstergeye dokunun; raf o göstergeyi besleyen fikirlere göre süzülür.</p>
+  </div>
+  <div class="gyk"><b>%31</b><p>Endeksin neredeyse üçte biri dört göstergeden geliyor: teknoparklardaki, TEKMER’lerdeki ve kuluçka merkezlerindeki akademisyen ve öğrenci/mezun firmalarının sayısı ve net satışı. Teknokent’in üniversiteye en doğrudan katkısı bu göstergelerde.</p></div>
+  <div class="gyw" id="gyw"></div>
+  <p class="note">Kaynak: <a href="https://tubitak.gov.tr/tr/girisimci-ve-yenilikci-universite-endeksi" target="_blank" rel="noopener">TÜBİTAK, Girişimci ve Yenilikçi Üniversite Endeksi</a>, 2024 gösterge seti ve ağırlıkları (28 Mayıs 2025’te açıklandı). Eşleştirme bir öneridir; birimlerle konuştukça değişir.</p>
+</section>
+
+<section id="hazir" data-view="hazir">
+  <div class="head">
+    <p class="eyebrow">Nereden başlamalı</p>
+    <h2>Hazır sepetler</h2>
+    <p class="note">Birbirini tamamlayan fikirler bir arada. Her sepet, bir kişinin ya da firmanın Teknokent'te atabileceği adımları sırasıyla gösterir. Kesikli çerçeveli adımlar bugün var olan çalışmalardır.</p>
+  </div>
+  <div class="packs" id="packs"></div>
+</section>
+
+<section id="takvim" data-view="takvim">
+  <div class="head">
+    <p class="eyebrow">2027’ye bakış</p>
+    <h2>Fikir takvimi</h2>
+    <p class="note">Her fikir, ilk adımının yazdığı aya yerleşti. Şubat ve Mart çok yoğun görünüyor; bu fikirlerin hepsi aynı anda başlamaz. Önce İlk 10 ile başlayıp diğerlerini sonraki aylara yaymak önerilir. Akademik takvime ilişkin notlar yaklaşıktır; kesin tarihler üniversitenin takviminden alınır.</p>
+  </div>
+  <div class="calf" role="group" aria-label="Takvimde göster"><button class="btn sm" type="button" data-calf="all">Hepsi</button><button class="btn sm" type="button" data-calf="t">Yalnızca İlk 10</button><button class="btn sm" type="button" data-calf="h">Hızlı başlangıç</button></div>
+  <div class="cal" id="cal"></div>
+  <div class="vc" id="cal-loose"></div>
+</section>
+
+<section id="veri" data-view="veri">
+  <div class="head">
+    <p class="eyebrow">Sayılarla dosya</p>
+    <h2>Fikirler nereye yoğunlaşıyor?</h2>
+    <p class="note">Bir satıra ya da kutuya dokunun; raf o seçime göre süzülür.</p>
+  </div>
+  <div class="viz">
+    <div class="vc"><h3>Temaya göre</h3><div class="bars" id="v-f"></div></div>
+    <div class="vc"><h3>Kime dokunuyor?</h3><div class="bars" id="v-k"></div><p class="note">Bir fikir birden fazla kitleye dokunabilir.</p></div>
+    <div class="vc"><h3>Hangi birimle birlikte?</h3><div class="bars" id="v-b"></div></div>
+    <div class="vc"><h3>Ne zaman, ne kadar efor?</h3><div class="mx" id="v-m"></div><p class="note">Efor ve dönem ön tahmindir; birimlerle konuşuldukça değişir.</p></div>
+  </div>
+</section>
+
+<section id="raf" data-view="raf">
+  <div class="head">
+    <p class="eyebrow">Raf</p>
+    <h2>Tüm fikirler</h2>
+  </div>
+  <div class="share" id="unitnote" hidden>
+    <p id="unitnote-t"></p>
+    <div class="acts"><a class="btn sm pri" id="unitnote-pk" target="_blank" rel="noopener">Birim paketini aç</a><button class="btn sm" id="unitnote-x" type="button">Tüm fikirleri göster</button></div>
+  </div>
+  <div class="tools">
+    <div class="fld wide2"><label for="q">Ara</label><input id="q" type="search" placeholder="Örneğin: öğrenci, gıda, 2209, siber güvenlik" autocomplete="off"></div>
+    <div class="fld"><label for="sort">Sırala</label><select id="sort"><option value="d">En erken başlayan</option><option value="p">Önceliğe göre</option><option value="e">En az efor</option><option value="n">Ada göre</option><option value="y">Yeni eklenenler önce</option></select></div>
+    <div class="fld"><span class="lbl2">Görünüm</span><div class="seg" role="group" aria-label="Görünüm"><button type="button" data-lay="grid">Kart</button><button type="button" data-lay="list">Liste</button></div></div>
+    <div class="fld"><label for="f-f">Tema</label><select id="f-f"></select></div>
+    <div class="fld"><label for="f-k">Kitle</label><select id="f-k"></select></div>
+    <div class="fld"><label for="f-b">Birlikte</label><select id="f-b"></select></div>
+    <div class="fld fb"><button class="btn" id="more" type="button" aria-expanded="false" aria-controls="moreb">Daha fazla süzgeç</button></div>
+    <div class="more" id="moreb" hidden><div class="fld"><label for="f-e">Efor</label><select id="f-e"></select></div><div class="fld"><label for="f-d">Dönem</label><select id="f-d"></select></div><div class="fld"><label for="f-pq">Öncelik</label><select id="f-pq"></select></div><div class="fld"><label for="f-gy">TÜBİTAK göstergesi</label><select id="f-gy"></select></div></div>
+  </div>
+  <div class="quick" id="quick" role="group" aria-label="Hızlı süzgeçler"></div>
+  <div class="meta"><p class="count" id="count" aria-live="polite"></p><button class="btn sm" id="rlink" type="button" hidden>Bu listenin bağlantısı</button><button class="btn sm" id="clear" type="button" hidden>Süzgeçleri temizle</button></div>
+  <div class="achips" id="achips" aria-label="Etkin süzgeçler"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="oner">
+  <div class="share" style="align-items:center">
+    <p><b>Aklınızda başka bir fikir mi var?</b> Teknokent, üniversite ya da sanayi için bir program veya etkinlik önerin; birlikte değerlendirelim.</p>
+    <div class="acts"><button class="btn pri" id="open-oner" type="button">Fikir öner</button></div>
+  </div>
+</section>
+
+<footer>Dosya Kasım 2026 itibarıyla güncel. Efor düzeyi, dönem ve birim eşleşmeleri öneridir; görevler ve sahiplik ilgili birimlerle birlikte netleşir. Sepetiniz, “Sepeti gönder” düğmesine basana kadar yalnızca bu tarayıcıda saklanır. · <a href="admin.html">Yönetici girişi</a> · <a href="kvkk.html">Kişisel veriler</a> <button class="btn sm" id="inst" type="button" hidden style="margin-left:6px">Uygulama olarak ekle</button></footer>
+</div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<button class="totop" id="totop" type="button" aria-label="Başa dön" title="Başa dön">↑</button>
+<dialog id="detail" aria-labelledby="d-h"><div class="dl" id="d-body"></div></dialog>
+
+<dialog id="oneri" aria-labelledby="o-h"><form class="dl" id="o-form">
+  <button class="btn sm x" type="button" data-close>Kapat</button>
+  <div class="head"><p class="eyebrow">Fikir öner</p><h2 id="o-h">Yeni bir fikriniz mi var?</h2><p class="note">Öneriniz Teknokent Özel Kalem'e ulaşır; ilgili birimlerle birlikte değerlendirilir.</p></div>
+  <div class="tools">
+    <div class="fld wide"><label for="o-t">Fikrin adı</label><input id="o-t" type="text" maxlength="80" required placeholder="Kısa bir ad yeterli"></div>
+    <div class="fld wide"><label for="o-d">Fikriniz</label><textarea id="o-d" maxlength="900" required placeholder="Ne yapılsın, kimin için, neden işe yarar?"></textarea></div>
+    <div class="fld"><label for="o-u">Biriminiz</label><select id="o-u"></select></div>
+    <div class="fld"><label for="o-n">Adınız</label><input id="o-n" type="text" maxlength="120" autocomplete="off" placeholder="İsteğe bağlı"></div>
+  </div>
+  <div class="acts"><button class="btn pri" type="submit">Öneriyi gönder</button></div>
+  <input class="hp" id="o-hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"><p class="ok" id="o-ok" aria-live="polite"></p>
+  <p class="note">Gönderdiğiniz bilgiler <a href="kvkk.html" target="_blank" rel="noopener">Aydınlatma Metni</a>’nde anlatıldığı şekilde işlenir.</p>
+</form></dialog>
+
+<dialog id="cmp" aria-labelledby="c-h"><div class="dl">
+  <button class="btn sm x" type="button" data-close>Kapat</button>
+  <div class="head"><p class="eyebrow">Karşılaştır</p><h2 id="c-h">Fikirler yan yana</h2><p class="note" id="c-note"></p></div>
+  <div class="cmpw" id="c-body"></div>
+</div></dialog>
+<dialog id="basket" aria-labelledby="b-h"><div class="dl">
+  <button class="btn sm x" type="button" data-close>Kapat</button>
+  <div class="head"><p class="eyebrow">Sepetim</p><h2 id="b-h">Seçtiğiniz fikirler</h2></div>
+  <div id="b-empty" class="empty" hidden>Sepetiniz boş. Raftaki bir fikrin “İlgimi çekti” düğmesine ya da hazır sepetlerden birine dokunun.</div>
+  <div id="b-full" class="blk" style="gap:18px">
+    <ul class="bl" id="b-list"></ul>
+    <div class="blk"><span class="lbl">Sepetin efor dağılımı</span><div class="stack" id="b-stack"></div><div class="leg" id="b-leg"></div></div>
+    <div class="blk"><span class="lbl">Ne zaman başlayabilir?</span><div class="when" id="b-when"></div></div>
+    <div class="blk"><span class="lbl">Hangi birimlerle birlikte?</span><div class="pills" id="b-units"></div></div>
+    <div class="blk"><span class="lbl">Kime dokunuyor?</span><div class="pills" id="b-aud"></div></div>
+    <div class="tools">
+      <div class="fld"><label for="b-unit">Biriminiz</label><select id="b-unit"></select></div>
+      <div class="fld"><label for="b-name">Adınız</label><input id="b-name" type="text" autocomplete="off" placeholder="İsteğe bağlı"></div>
+      <div class="fld wide"><label for="b-note">Notunuz</label><input id="b-note" type="text" autocomplete="off" placeholder="Örneğin: şu fikri bizim birimle konuşalım"></div>
+    </div>
+    <div class="fld"><label for="msg">Paylaşılacak özet</label><textarea id="msg" readonly></textarea></div>
+    <div class="acts"><button class="btn pri" id="b-send" type="button">Sepeti gönder</button><button class="btn" id="b-copy" type="button">Özeti kopyala</button><a class="btn" id="b-print" href="cikti.html">Tek sayfa çıktı</a><button class="btn" id="b-cmp" type="button">Yan yana karşılaştır</button><button class="btn" id="b-clear" type="button">Sepeti boşalt</button></div>
+    <input class="hp" id="b-hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"><p class="ok" id="b-ok" aria-live="polite"></p>
+    <p class="note" id="b-how">“Sepeti gönder” seçimlerinizi, yazdıysanız adınızı, biriminizi ve notunuzu Teknokent Özel Kalem'e iletir. Dilerseniz özeti kopyalayıp kendiniz de paylaşabilirsiniz.</p>
+    <p class="note">Gönderdiğiniz bilgiler <a href="kvkk.html" target="_blank" rel="noopener">Aydınlatma Metni</a>’nde anlatıldığı şekilde işlenir.</p>
+  </div>
+</div></dialog>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script src="seed.js"></script>
+<script src="store.js"></script>
+<script src="gate.js"></script>
+<script>
+window.addEventListener('error',function(ev){try{var m=String(ev.message||'hata').replace(/[\/\n]/g,' ').slice(0,70)+' @'+String(ev.filename||'').split('/').pop().slice(0,20)+':'+(ev.lineno||0), k='fs-err-'+m;
+  if(sessionStorage.getItem(k)||!window.Store||!Store.bump) return; sessionStorage.setItem(k,'1'); Store.bump('e-'+m,'ac')}catch(e){}});
+function boot(I){
+  var A='https://claude.ai/artifact/', HERE=location.href.split('#')[0];
+  var K=SEED.K,B=SEED.B,E=SEED.E,D=SEED.D,F=SEED.F, EC={1:'var(--low)',2:'var(--mid)',3:'var(--high)'}, DS={1:'Kış',2:'Bahar',3:'Güz 2027+'};
+  var ST={}; SEED.ideas.forEach(function(x){ST[x.id]=x});
+  I.forEach(function(i){if(ST[i.id]&&ST[i.id].n===i.n){if(i.t===undefined&&ST[i.id].t)i.t=ST[i.id].t;if(ST[i.id].nw)i.nw=1;['im','pq','tp','wy','hd','ev','mo','pg','gy','sl','ad'].forEach(function(k){if(ST[i.id][k]!==undefined&&i[k]===undefined)i[k]=ST[i.id][k]})}i.k=i.k||'';i.o=i.o||'';if(!F[i.f])i.f=1;if(!B[i.b])i.b='ok';if(!E[i.e])i.e=2;if(!D[i.d])i.d=2});
+  var byId={}; I.forEach(function(i){byId[i.id]=i; i.hay=[i.n,i.t||'',i.o,i.l||'',i.g||'',F[i.f],B[i.b],i.v||''].join(' ').toLocaleLowerCase('tr')});
+  var P=SEED.paths.map(function(p){return {t:p.t,s:p.s,five:p.five,st:p.st.filter(function(x){return x[1]||byId[x[0]]})}}).filter(function(p){return p.st.some(function(x){return !x[1]})});
+  var $=function(id){return document.getElementById(id)};
+  function link(u){return /^https?:\/\//.test(u)?u:A+u}
+  function stat(i){return i.s?'<span class="pill s">'+esc(i.s+(i.sn?' · '+i.sn:''))+'</span>':''}
+  $('demo').hidden=Store.mode!=='demo';
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function load(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  var G={us:'Sanayici kampüse gelsin',ar:'Araştırma ve proje fonu',gi:'Girişimcilik',og:'Öğrenci ve yetenek',ye:'Yeşil dönüşüm',ul:'Uluslararasılaşma',ku:'Teknokent içi topluluk'};
+  var QN={h:'Hızlı başlangıç',b:'Büyük hamle',k:'Kolay katkı',s:'Sırası gelince'}, QO={h:0,b:1,k:2,s:3};
+  var QD={h:'Yüksek etki; az hazırlıkla yakın dönemde başlar',b:'Yüksek etki; daha çok hazırlık ve ortak ister',k:'Az eforla tamamlayıcı katkı',s:'İlgili birim hazır olduğunda'};
+  var IM={1:'Tamamlayıcı',2:'Orta',3:'Yüksek'}, PKG='birim-paketleri.html';
+  var GY={"1.1":["Bilimsel yayın sayısı",2.5],"1.2":["Atıf sayısı",3.5],"1.3":["Proje sayısı",2],"1.4":["Proje fon tutarı",3],"1.5":["Ödül sayısı",1.5],"1.6":["Doktora mezun sayısı",2.5],"2.1":["Ulusal patent belgesi",5.2],"2.2":["Ulusal faydalı model belgesi",3],"2.3":["Uluslararası patent başvurusu",5],"2.4":["Uluslararası patent belgesi",6.8],"3.1":["Sanayi iş birlikli proje sayısı",5],"3.2":["Sanayi iş birlikli proje fon tutarı",6],"3.3":["Uluslararası iş birlikli proje sayısı",5],"3.4":["Uluslararası iş birlikli proje fon tutarı",6],"3.5":["Dolaşım sayısı",1.44],"3.6":["2244 Sanayi Doktora öğrenci sayısı",1.56],"4.1":["Akademisyen firma sayısı",5.68],"4.2":["Öğrenci/mezun firma sayısı",7.57],"4.3":["Akademisyen firmalarının net satışı",7.57],"4.4":["Öğrenci/mezun firmalarının net satışı",10.41],"4.5":["Lisanslanan patent sayısı",3.78],"4.6":["BiGG firma sayısı",3],"4.7":["4004-4005 proje sayısı",2]}, GD={"1":["Bilimsel ve Teknolojik Araştırma Yetkinliği",15],"2":["Fikri Mülkiyet Havuzu",20],"3":["İş Birliği ve Etkileşim",25],"4":["Ekonomik ve Toplumsal Katkı",40]};
+  function gyw(w){return '%'+String(w).replace('.',',')}
+  var MO=['Aralık 2026','Ocak 2027','Şubat 2027','Mart 2027','Nisan 2027','Mayıs 2027','Haziran 2027','Temmuz 2027','Ağustos 2027','Eylül 2027','Ekim 2027','Kasım 2027'];
+  var CX={1:'Güz dönemi finalleri (yaklaşık Ocak ortası)',2:'Yarıyıl tatili, ardından bahar dönemi başlar',3:'Ramazan Bayramı 9–11 Mart',5:'Kurban Bayramı 16–19 Mayıs',6:'Bahar dönemi finalleri',7:'Yaz dönemi; kampüs sakin',8:'Yaz dönemi; 17 Ağustos',9:'Güz dönemi başlar',10:'TÜBİTAK 2209-B çağrısı (her yıl Ekim–Kasım)'};
+  I.forEach(function(i){i.hd=i.hd||[];if(!QN[i.pq])i.pq='s';if(!IM[i.im])i.im=2});
+  function tpill(i){return i.tp?'<span class="pill tp">İlk 10 · '+i.tp+'</span>':''}
+
+  var basket=load('fs-basket',[]).filter(function(id){return byId[id]});
+  var st={q:'',f:'',k:'',b:'',e:'',d:'',pq:'',hd:'',gy:'',sort:'d',calf:'all',lay:load('fs-lay','grid'),nw:'',vx:''};
+  var VIEWS=[['genel','Genel bakış'],['raf','Tüm fikirler'],['programlar','Programlar'],['oncelik','Öncelik haritası'],['tubitak','TÜBİTAK endeksi'],['hazir','Hazır sepetler'],['takvim','Fikir takvimi'],['veri','Sayılarla dosya']], view='genel';
+  var BK={"usi":"Üniversite–Sanayi","tto":"TTO","gs":"Girişimcilik","pd":"Proje Destek","ki":"Kurumsal İletişim","ao":"Ar-Ge Operasyon","it":"İdari","ik":"İnsan Kaynakları","gm":"Genel Müdürlük","mta":"Milli Teknoloji"}, OUT='Teknokent dışından (firma, akademisyen, öğrenci)';
+  /* a unit "works together" on an idea when it leads it or is named among its partners */
+  function inB(i,b){if(i.b===b) return true; if(b==='ok'||!BK[b]) return false; return (i.r||[]).some(function(r){return String(r[0]).indexOf(BK[b])===0})}
+  function unitName(c){return c==='dis'?OUT:(B[c]||'')}
+  /* quiet interest counter: one "opened" per idea per visit, one "marked" per idea per browser */
+  function bump(id,k){try{var key='fs-'+k+'-'+id, s=k==='ac'?sessionStorage:localStorage; if(s.getItem(key)) return; s.setItem(key,'1'); if(window.Store&&Store.bump) Store.bump(id,k)}catch(e){}}
+  function has(id){return basket.indexOf(id)>-1}
+  function toast(m){var t=$('toast'); t.textContent=m; t.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(function(){t.hidden=true},2400)}
+  function toggle(id){var x=basket.indexOf(id); if(x>-1) basket.splice(x,1); else {basket.push(id); bump(id,'is')} save('fs-basket',basket); refresh(); toast(x>-1?'“'+byId[id].n+'” sepetten çıkarıldı':'“'+byId[id].n+'” sepetinize eklendi · Sepette '+basket.length+' fikir')}
+  function addMany(ids){ids.forEach(function(id){if(byId[id]&&!has(id)){basket.push(id); bump(id,'is')}}); save('fs-basket',basket); refresh()}
+
+  /* ready-made baskets */
+  function drawPacks(){
+    $('packs').innerHTML=P.map(function(p,pi){
+      var ids=p.st.filter(function(s){return !s[1]}).map(function(s){return s[0]});
+      var all=ids.every(has);
+      return '<article class="pack'+(p.five?' five':'')+'"><div><h3>'+esc(p.t)+'</h3><small>'+esc(p.s)+'</small></div><div class="steps">'+
+        p.st.map(function(s,si){return (si?'<i>→</i>':'')+(s[1]?'<span class="tag ex">'+esc(s[0])+'</span>':'<button type="button" class="tag'+(has(s[0])?' in':'')+'" data-open="'+s[0]+'">'+esc(byId[s[0]].n)+'</button>')}).join('')+
+        '</div><div class="foot"><span>'+ids.length+' fikir</span><button type="button" class="btn sm'+(all?' on':' pri')+'" data-pack="'+pi+'"'+(all?' disabled':'')+'>'+(all?'Hepsi sepetinizde':'Hepsi ilgimi çekti')+'</button></div></article>';
+    }).join('');
+  }
+
+  /* the file as data */
+  function bars(el,key,dict,multi){
+    var rows=Object.keys(dict).map(function(c){return [c,I.filter(function(i){return key==='b'?inB(i,c):multi?i[key].indexOf(c)>-1:String(i[key])===c}).length]}).filter(function(r){return r[1]});
+    rows.sort(function(a,b){return b[1]-a[1]}); var mx=rows[0][1];
+    $(el).innerHTML=rows.map(function(r){return '<button type="button" class="brow" data-set="'+key+'" data-v="'+r[0]+'" aria-pressed="'+(st[key]===r[0])+'"><span>'+esc(dict[r[0]])+'</span><span class="tr"><i style="width:'+(r[1]/mx*100)+'%"></i></span><b>'+r[1]+'</b></button>'}).join('');
+  }
+  function matrix(){
+    var h='<span class="h l"></span>'+[1,2,3].map(function(d){return '<span class="h">'+DS[d]+'</span>'}).join('');
+    [1,2,3].forEach(function(e){
+      h+='<span class="h l" style="color:'+EC[e]+'">'+E[e]+'</span>';
+      [1,2,3].forEach(function(d){var n=I.filter(function(i){return i.e===e&&i.d===d}).length;
+        h+='<button type="button" data-mx="'+e+'-'+d+'" aria-pressed="'+(st.e===String(e)&&st.d===String(d))+'" aria-label="'+E[e]+' efor, '+D[d]+': '+n+' fikir" style="background:rgba(46,168,211,'+(0.06+n/14*0.5).toFixed(2)+')">'+n+'</button>'});
+    });
+    $('v-m').innerHTML=h;
+  }
+  function drawPrio(){
+    var T=I.filter(function(i){return i.tp}).sort(function(a,b){return a.tp-b.tp});
+    $('top10').innerHTML=T.map(function(i){return '<li'+(has(i.id)?' class="in"':'')+'><span class="no">'+i.tp+'</span><div><button type="button" class="nm" data-open="'+i.id+'">'+esc(i.n)+(i.t?' · '+esc(i.t):'')+'</button><small>'+esc(i.wy||i.o)+'</small><div class="pills"><span class="pill e'+i.e+'">'+E[i.e]+' efor</span>'+(i.fs?'<span class="pill">'+esc(i.fs)+'</span>':'')+'</div></div></li>'}).join('');
+    var all=T.length&&T.every(function(i){return has(i.id)}); $('top-all').disabled=!!all; $('top-all').textContent=all?'İlk 10 sepetinizde':'İlk 10’un hepsi ilgimi çekti'; $('top-all').className='btn sm'+(all?' on':' pri');
+    var c=function(q){return I.filter(function(i){return i.pq===q}).length};
+    var box=function(q){return '<button type="button" class="qd '+q+'" data-set="pq" data-v="'+q+'" aria-pressed="'+(st.pq===q)+'"><b>'+c(q)+'</b><span>'+QN[q]+'</span><small>'+QD[q]+'</small></button>'};
+    $('quad').innerHTML='<span></span><span class="ax">Daha az hazırlık</span><span class="ax">Daha çok hazırlık</span><span class="ax v">Yüksek etki</span>'+box('h')+box('b')+'<span class="ax v">Tamamlayıcı</span>'+box('k')+box('s');
+    bars('v-h','hd',G,true);
+  }
+  function drawCal(){
+    var ok=function(i){return st.calf==='t'?!!i.tp:st.calf==='h'?(i.pq==='h'||!!i.tp):true};
+    var chip=function(i,lab){return '<button type="button" class="tag'+(i.tp?' tp':'')+'" data-open="'+i.id+'" title="'+esc(lab||'')+'">'+(i.tp?'★ ':'')+esc(i.n)+'</button>'};
+    var h='';
+    MO.forEach(function(m,k){
+      var L=[]; I.forEach(function(i){(i.mo||[]).forEach(function(x){if(x[0]===k&&ok(i)) L.push([i,x[1]])})});
+      L.sort(function(a,b){return (a[0].tp||99)-(b[0].tp||99)||QO[a[0].pq]-QO[b[0].pq]||a[0].n.localeCompare(b[0].n,'tr')});
+      var busy=st.calf==='all'&&L.length>8;
+      h+='<div class="mo'+(busy?' busy':'')+'"><h3>'+m+'<small>'+L.length+' fikir</small></h3>'+(CX[k]?'<p class="cx">'+esc(CX[k])+'</p>':'')+(busy?'<span class="bz">Yoğun ay · yayılması önerilir</span>':'')+(L.length?'<div class="steps">'+L.map(function(x){return chip(x[0],x[1])}).join('')+'</div>':'<p class="none">Bu ay başlayan fikir yok.</p>')+'</div>';
+    });
+    $('cal').innerHTML=h;
+    var lo=[1,2,3].map(function(d){return [d,I.filter(function(i){return !(i.mo&&i.mo.length)&&i.d===d&&ok(i)})]}).filter(function(x){return x[1].length});
+    $('cal-loose').hidden=!lo.length;
+    $('cal-loose').innerHTML='<h3>Ayı henüz belli olmayanlar</h3><p class="note">Bu fikirlerin ilk adımı birimlerle konuşulunca belirlenir; şimdilik dönemine göre sıralandı.</p>'+lo.map(function(x){return '<div class="blk" style="gap:6px"><span class="lbl">'+esc(D[x[0]])+'</span><div class="steps">'+x[1].map(function(i){return chip(i)}).join('')+'</div></div>'}).join('');
+    [].forEach.call(document.querySelectorAll('[data-calf]'),function(b){b.setAttribute('aria-pressed',String(st.calf===b.dataset.calf))});
+  }
+  function drawGy(){
+    var mx=Math.max.apply(null,Object.keys(GY).map(function(c){return GY[c][1]}));
+    $('gyw').innerHTML=['4','3','2','1'].map(function(d){
+      var cs=Object.keys(GY).filter(function(c){return c.split('.')[0]===d});
+      return '<div class="vc"><h3>'+esc(GD[d][0])+' · %'+GD[d][1]+'</h3><div class="gyh"><span></span><span>Gösterge</span><span>Ağırlık</span><span>Fikir</span></div><div class="bars">'+cs.map(function(c){
+        var n=I.filter(function(i){return (i.gy||[]).indexOf(c)>-1}).length, w=GY[c][1];
+        var x='<span class="cd">'+c+'</span><span>'+esc(GY[c][0])+'</span><span class="wt">'+gyw(w)+'<i style="width:'+Math.round(w/mx*100)+'%"></i></span><b>'+(n||'–')+'</b>';
+        return n?'<button type="button" class="gyr" data-set="gy" data-v="'+c+'" aria-pressed="'+(st.gy===c)+'" aria-label="'+esc(c+' '+GY[c][0]+': '+n+' fikir')+'">'+x+'</button>':'<div class="gyr none" title="Bu göstergeyi doğrudan besleyen fikir henüz yok">'+x+'</div>';
+      }).join('')+'</div></div>';
+    }).join('');
+  }
+  /* sol menü */
+  function drawSide(){
+    var n={raf:I.length,programlar:I.filter(function(i){return i.pg}).length,hazir:P.length};
+    var it=function(v){return '<a class="si" href="#'+v[0]+'" data-go="'+v[0]+'"'+(view===v[0]?' aria-current="page"':'')+'><span>'+esc(v[1])+'</span>'+(n[v[0]]?'<b>'+n[v[0]]+'</b>':'')+'</a>'};
+    var th=Object.keys(F).map(function(c){var k=I.filter(function(i){return String(i.f)===c}).length; return k?'<button type="button" class="si" data-th="'+c+'" aria-pressed="'+(view==='raf'&&st.f===c)+'"><span>'+esc(F[c])+'</span><b>'+k+'</b></button>':''}).join('');
+    var wh=Object.keys(K).map(function(c){var k=I.filter(function(i){return i.k.indexOf(c)>-1}).length; return k?'<button type="button" class="si" data-who="'+c+'" aria-pressed="'+(view==='raf'&&st.k===c)+'"><span>'+esc(K[c])+'</span><b>'+k+'</b></button>':''}).join('');
+    $('side').innerHTML='<div class="sg"><span class="sl">Bölümler</span>'+VIEWS.filter(function(v){return v[0]!=='programlar'||n.programlar}).map(it).join('')+'</div>'+
+      '<div class="sg ex"><span class="sl">Temalar</span>'+th+'</div><div class="sg ex"><span class="sl">Kim için?</span>'+wh+'</div>';
+    var cur=$('side').querySelector('[aria-current="page"]'); if(cur&&window.innerWidth<=960) try{cur.scrollIntoView({block:'nearest',inline:'center'})}catch(e){}
+  }
+  var T0=document.title;
+  function setTitle(x){document.title=x?x+' · '+T0:T0}
+  function vTitle(){if(view==='genel') return ''; var m=VIEWS.filter(function(x){return x[0]===view})[0]; return m?m[1]:''}
+  function go(v,keep){
+    if(!VIEWS.some(function(x){return x[0]===v})) v='genel';
+    view=v;
+    [].forEach.call(document.querySelectorAll('.wrap [data-view]'),function(el){el.classList.toggle('off',el.dataset.view!==v)});
+    drawSide();
+    if(!keep&&!/^#s-/.test(location.hash||'')&&location.hash!=='#'+(v==='raf'?rafHash():v)) try{history.pushState(null,'','#'+(v==='raf'?rafHash():v))}catch(e){}
+    setTitle(vTitle());
+    if(!keep){var hd=document.querySelector('.wrap [data-view="'+v+'"] h1,.wrap [data-view="'+v+'"] h2'); if(hd){hd.setAttribute('tabindex','-1'); try{hd.focus({preventScroll:true})}catch(e){}}}
+    try{window.scrollTo({top:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}
+  }
+  /* neler değişti */
+  function drawChg(){
+    var MN=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'], g={};
+    I.forEach(function(i){if(i.ad) (g[i.ad]=g[i.ad]||[]).push(i)});
+    var ks=Object.keys(g).sort().reverse(); $('degisim').hidden=!ks.length; if(!ks.length) return;
+    $('chg').innerHTML=ks.map(function(k){var L=g[k], p=k.split('-');
+      return '<div class="ci"><time datetime="'+k+'">'+(+p[2])+' '+MN[+p[1]-1]+' '+p[0]+'</time><b>'+(L.length+' yeni fikir eklendi')+'</b><div class="steps">'+L.map(function(i){return '<button type="button" class="tag" data-open="'+i.id+'">'+esc(i.n)+'</button>'}).join('')+'</div></div>'}).join('');
+  }
+  /* yan yana karşılaştır */
+  function drawCmp(){
+    var L=basket.filter(function(id){return byId[id]}).slice(0,4).map(function(id){return byId[id]});
+    if(L.length<2){if($('cmp').open) $('cmp').close(); return}
+    var CL=['Tema','Kısaca','Hedef','İlk adım','Asıl ölçüt','Efor','Dönem','Öncelik','Etki','Yürüten birim','Kimin için'];
+    var V=[function(i){return F[i.f]},function(i){return i.o},function(i){return i.g||'–'},function(i){return i.fs||'–'},function(i){return i.kp||'–'},function(i){return E[i.e]},function(i){return D[i.d]},
+      function(i){return QN[i.pq]+(i.tp?' · #'+i.tp:'')},function(i){return IM[i.im]},function(i){return B[i.b]},function(i){return i.k.split('').map(function(c){return K[c]}).join(', ')}];
+    $('c-note').textContent=basket.length>4?('Sepetteki ilk 4 fikir gösteriliyor.'):'';
+    $('c-body').innerHTML='<table class="cmp"><thead><tr><th></th>'+L.map(function(i){return '<th scope="col">'+esc(i.n)+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<span class="ca"><button type="button" class="btn sm" data-open="'+i.id+'">Ayrıntı</button><button type="button" class="btn sm" data-tog="'+i.id+'" aria-label="'+esc(i.n)+' · '+('Sepetten çıkar')+'">×</button></span></th>'}).join('')+'</tr></thead><tbody>'+
+      CL.map(function(c,x){return '<tr><th scope="row">'+esc(c)+'</th>'+L.map(function(i){return '<td>'+esc(V[x](i))+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table>';
+  }
+  /* tema */
+  function setTheme(m){var r=document.documentElement, THL=['Açık temaya geç','Koyu temaya geç'], b=$('theme');
+    if(m==='light') r.setAttribute('data-fs','light'); else r.removeAttribute('data-fs');
+    if(b){b.textContent=m==='light'?'☾':'☀'; b.setAttribute('aria-label',THL[m==='light'?1:0]); b.title=THL[m==='light'?1:0]}
+    try{localStorage.setItem('fs-theme',m)}catch(e){}}
+  function drawHome(){
+    drawChg();
+    var np=I.filter(function(i){return i.pg}).length, nt=I.filter(function(i){return i.tp}).length;
+    var T=[['raf',I.length,'fikir','Tüm fikirler','Fikirlerin tamamı tek rafta: arayın, süzün, ilginizi çekenleri sepetinize ekleyin.'],
+      ['programlar',np,'program','Programlar','Sakarya Üniversitesi’ni büyütmek için tasarlanan dört üniversite–sanayi programı.'],
+      ['oncelik',nt,'öncelikli','Öncelik haritası','İlk 10 fikir ve her fikrin etki–hazırlık dengesindeki yeri.'],
+      ['tubitak',Object.keys(GY).length,'gösterge','TÜBİTAK endeksi','Fikirlerin TÜBİTAK’ın Girişimci ve Yenilikçi Üniversite Endeksi’ndeki karşılığı.'],
+      ['hazir',P.length,'sepet','Hazır sepetler','Birbirini tamamlayan fikirler, atılacak adımların sırasıyla.'],
+      ['takvim',12,'ay','Fikir takvimi','2027’de hangi ay hangi fikrin ilk adımının atılacağı.'],
+      ['veri',Object.keys(F).filter(function(f){return I.some(function(i){return String(i.f)===f})}).length,'tema','Sayılarla dosya','Fikirlerin temaya, kitleye, birime ve efora göre dağılımı.']];
+    $('tiles').innerHTML=T.filter(function(t){return t[0]!=='programlar'||np}).map(function(t){return '<a class="tile" href="#'+t[0]+'" data-go="'+t[0]+'"><span class="k">'+t[1]+'<small>'+esc(t[2])+'</small></span><h3>'+esc(t[3])+'</h3><p>'+esc(t[4])+'</p><span class="gt">Aç →</span></a>'}).join('');
+    var rank=function(a,b){return (a.tp||99)-(b.tp||99)||b.im-a.im||QO[a.pq]-QO[b.pq]||a.n.localeCompare(b.n,'tr')};
+    $('tgrid').innerHTML=Object.keys(F).map(function(c){var L=I.filter(function(i){return String(i.f)===c}).sort(rank); return L.length?'<button type="button" class="tt" data-th="'+c+'"><span class="n">'+esc(F[c])+'<b>'+L.length+'</b></span><small>'+esc(L.slice(0,3).map(function(i){return i.n}).join(' · '))+'</small></button>':''}).join('');
+    var TP=I.filter(function(i){return i.tp}).sort(function(a,b){return a.tp-b.tp});
+    $('one').hidden=!TP.length;
+    $('feat').innerHTML=TP.map(function(i){return '<li><button type="button" data-open="'+i.id+'"><span class="no">'+i.tp+'</span><span class="bd"><b>'+esc(i.n)+'</b>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<small>'+esc(i.wy||i.o)+'</small><span class="pills"><span class="pill e'+i.e+'">'+E[i.e]+' efor</span>'+(i.fs?'<span class="pill">'+esc(i.fs)+'</span>':'')+'</span></span></button></li>'}).join('');
+    var N=I.filter(function(i){return i.nw});
+    $('yeni').hidden=!N.length;
+    $('yeni-list').innerHTML=N.map(function(i){return '<button type="button" class="mi" data-open="'+i.id+'"><span class="th2">'+esc(F[i.f])+'</span><b>'+esc(i.n)+'</b>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<small>'+esc(i.o)+'</small></button>'}).join('');
+  }
+  function initView(){
+    drawHome();
+    var h=(location.hash||'').slice(1), uq=''; try{uq=new URLSearchParams(location.search).get('birim')||''}catch(e){}
+    var fm=/^f-(\d+)$/.exec(h), rf=/^raf-/.test(h);
+    go(VIEWS.some(function(x){return x[0]===h})?h:(B[uq]||fm||rf?'raf':'genel'),true);
+    if(rf) applyRaf(h);
+    var dt=new Date(); bump('gun-'+dt.getFullYear()+('0'+(dt.getMonth()+1)).slice(-2)+('0'+dt.getDate()).slice(-2),'ac');
+    if(fm&&byId[+fm[1]]) openDetail(+fm[1]);
+    setTimeout(function(){try{window.scrollTo({top:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}},0);
+  }
+  function drawViz(){bars('v-f','f',F);bars('v-k','k',K,true);bars('v-b','b',B);matrix();drawPrio();drawGy()}
+
+  /* the shelf */
+  function fill(id,dict,key,multi){
+    var keys=Object.keys(dict).filter(function(c){return I.some(function(i){return multi?i[key].indexOf(c)>-1:String(i[key])===c})});
+    var cnt=function(c){return I.filter(function(i){return key==='b'?inB(i,c):multi?i[key].indexOf(c)>-1:String(i[key])===c}).length};
+    $(id).innerHTML='<option value="">Hepsi ('+I.length+')</option>'+keys.map(function(c){return '<option value="'+c+'">'+esc(dict[c])+' ('+cnt(c)+')</option>'}).join('');
+    $(id).addEventListener('change',function(){st[key]=this.value;draw();drawViz()});
+  }
+  function rows(){
+    var q=st.q.trim().toLocaleLowerCase('tr').split(/\s+/).filter(Boolean);
+    var r=I.filter(function(i){return (!st.f||String(i.f)===st.f)&&(!st.k||i.k.indexOf(st.k)>-1)&&(!st.b||inB(i,st.b))&&(!st.e||String(i.e)===st.e)&&(!st.d||String(i.d)===st.d)&&(!st.pq||(st.pq==='t'?!!i.tp:i.pq===st.pq))&&(!st.hd||i.hd.indexOf(st.hd)>-1)&&(!st.gy||(i.gy||[]).indexOf(st.gy)>-1)&&(!st.nw||!!i.nw)&&(!st.vx||(!!i.v&&!i.vn))&&q.every(function(w){return i.hay.indexOf(w)>-1})});
+    r.sort(function(a,b){var u=st.b?((a.b===st.b?0:1)-(b.b===st.b?0:1)):0; if(u) return u; if(st.sort==='y'&&(a.nw|0)!==(b.nw|0)) return (b.nw|0)-(a.nw|0); if(st.sort==='p') return (a.tp||99)-(b.tp||99)||b.im-a.im||QO[a.pq]-QO[b.pq]||a.e-b.e||a.n.localeCompare(b.n,'tr'); return st.sort==='n'?a.n.localeCompare(b.n,'tr'):st.sort==='e'?(a.e-b.e||a.d-b.d||a.n.localeCompare(b.n,'tr')):(a.d-b.d||a.e-b.e||a.n.localeCompare(b.n,'tr'))});
+    return r;
+  }
+  /* adres çubuğunda süzgeçler: #raf-t3-ko … */
+  var RC={f:'t',k:'k',b:'b',e:'e',d:'d',pq:'p',hd:'h',gy:'g',nw:'n',vx:'x',sort:'o'};
+  function rafHash(){var h='raf'; Object.keys(RC).forEach(function(k){var v=st[k]; if(!v||(k==='sort'&&v==='d')) return; v=String(v).replace(/\./g,'x'); if(/^[A-Za-z0-9]+$/.test(v)) h+='-'+RC[k]+v});
+    if(typeof HERE!=='undefined'&&st.q.trim()) h+='-q'+encodeURIComponent(st.q.trim()).replace(/-/g,'%2D'); return h}
+  function readRaf(h){var o={q:'',f:'',k:'',b:'',e:'',d:'',pq:'',hd:'',gy:'',nw:'',vx:'',sort:'d'}, inv={}, ok={f:F,k:K,b:B,e:E,d:D,hd:G,gy:GY};
+    Object.keys(RC).forEach(function(k){inv[RC[k]]=k});
+    h.split('-').slice(1).forEach(function(s){var c=s.charAt(0), v=s.slice(1), k=inv[c]; if(!v) return;
+      if(c==='q'){try{o.q=decodeURIComponent(v)}catch(e){} return} if(!k) return; if(k==='gy') v=v.replace(/x/g,'.');
+      if(ok[k]?ok[k][v]!==undefined:k==='pq'?(v==='t'||QN[v]!==undefined):k==='sort'?/^[dpeny]$/.test(v):v==='1') o[k]=v});
+    return o}
+  function applyRaf(h){var o=readRaf(h); Object.keys(o).forEach(function(k){st[k]=o[k]}); $('q').value=st.q; $('gq').value=st.q; $('sort').value=st.sort; draw(); drawViz()}
+  function syncRaf(){if(view!=='raf'||/^#(s|f)-/.test(location.hash||'')) return; var h='#'+rafHash(); if(location.hash!==h) try{history.replaceState(null,'',h)}catch(e){}}
+  /* boş sonuçta öneriler */
+  function lev(a,b){if(a===b) return 0; var m=a.length,n=b.length; if(!m) return n; if(!n) return m; var p=[],c,i,j; for(j=0;j<=n;j++) p[j]=j;
+    for(i=1;i<=m;i++){c=[i]; for(j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1)); p=c} return p[n]}
+  var WSPLIT=/[^0-9a-zçğıöşüâîû]+/, VOC=null;
+  function vocab(){if(VOC) return VOC; var o={}; I.forEach(function(i){i.hay.split(WSPLIT).forEach(function(w){if(w.length>2) o[w]=(o[w]||0)+1})}); VOC={w:Object.keys(o),c:o}; return VOC}
+  function fixWord(w){var V=vocab(), best='', bd=99, lim=w.length<5?1:2; V.w.forEach(function(v){if(Math.abs(v.length-w.length)>lim) return; var d=lev(w,v); if(d<bd||(d===bd&&V.c[v]>V.c[best])){bd=d;best=v}}); return bd<=lim?best:''}
+  function emptyHelp(){
+    var q=st.q.trim().toLocaleLowerCase('tr'); if(!q) return '';
+    var ws=q.split(/\s+/).filter(Boolean), out='', n=0;
+    var others=st.f||st.k||st.b||st.e||st.d||st.pq||st.hd||st.gy||st.nw||st.vx;
+    if(others){n=I.filter(function(i){return ws.every(function(w){return i.hay.indexOf(w)>-1})}).length; if(n) out+='<p class="note">'+('Süzgeçler kaldırılırsa aramanıza uyan '+n+' fikir var.')+'</p>'}
+    if(n) return out;
+    var fixed=ws.map(function(w){return I.some(function(i){return i.hay.indexOf(w)>-1})?w:(fixWord(w)||w)}).join(' ');
+    if(fixed!==ws.join(' ')) out+='<p>Bunu mu demek istediniz: <button type="button" class="btn sm" data-sq="'+esc(fixed)+'">'+esc(fixed)+'</button></p>';
+    var fw=fixed.split(' '), fm=fixed!==ws.join(' ')?I.filter(function(i){return fw.every(function(w){return i.hay.indexOf(w)>-1})}):[];
+    var nmh=function(i){return fw.some(function(w){return (i.n+' '+(i.t||'')+' '+i.o).toLocaleLowerCase('tr').indexOf(w)>-1})?0:1}; fm.sort(function(x,y){return nmh(x)-nmh(y)||(x.tp||99)-(y.tp||99)});
+    var sc=fm.length?fm.slice(0,5).map(function(i){return [1,i]}):I.map(function(i){var iw=i.hay.split(WSPLIT).filter(function(x){return x.length>2}), s=0;
+      ws.forEach(function(w){var b=0; iw.forEach(function(x){var v=(w.length>=4&&x.indexOf(w.slice(0,4))===0)?.8:1-lev(w,x)/Math.max(w.length,x.length); if(v>b) b=v}); s+=b});
+      return [s/ws.length,i]}).filter(function(x){return x[0]>=.78}).sort(function(a,b){return b[0]-a[0]}).slice(0,5);
+    if(sc.length) out+='<span class="lbl" style="margin-top:16px">Yakın sonuçlar</span><div class="sugg">'+sc.map(function(x){return '<button type="button" class="tag" data-open="'+x[1].id+'">'+esc(x[1].n)+'</button>'}).join('')+'</div>';
+    return out}
+  var missT=null;
+  function logMiss(){var q=st.q.trim().toLocaleLowerCase('tr'); if(q.length<3||st.f||st.k||st.b||st.e||st.d||st.pq||st.hd||st.gy||st.nw||st.vx) return;
+    clearTimeout(missT); missT=setTimeout(function(){if(st.q.trim().toLocaleLowerCase('tr')===q&&!rows().length) bump('q-'+q.replace(/\//g,' ').slice(0,40),'ac')},1800)}
+  function draw(){
+    setTimeout(syncRaf,0);
+    var r=rows(), any=st.q||st.f||st.k||st.b||st.e||st.d||st.pq||st.hd||st.gy||st.nw||st.vx;
+    ['f','k','b','e','d','pq','gy'].forEach(function(k){$('f-'+k).value=st[k]});
+    [].forEach.call(document.querySelectorAll('#who [data-who]'),function(b){b.setAttribute('aria-pressed',String(st.k===b.dataset.who))});
+    if($('side').innerHTML) drawSide();
+    $('count').textContent=r.length+' fikir gösteriliyor'+(any?' · toplam '+I.length:'');
+    $('clear').hidden=!any; $('rlink').hidden=!any;
+    var ch=[]; var cp=function(k,lab,val){ch.push('<button type="button" class="achip" data-clr="'+k+'" aria-label="'+esc(lab+' süzgecini kaldır')+'">'+esc(lab+': '+val)+'<span aria-hidden="true">×</span></button>')};
+    if(st.q.trim()) cp('q','Ara','“'+st.q.trim()+'”'); if(st.f) cp('f','Tema',F[st.f]); if(st.k) cp('k','Kitle',K[st.k]); if(st.b) cp('b','Birlikte',B[st.b]||st.b);
+    if(st.e) cp('e','Efor',E[st.e]); if(st.d) cp('d','Dönem',DS[st.d]); if(st.pq) cp('pq','Öncelik',st.pq==='t'?'İlk 10':QN[st.pq]); if(st.hd) cp('hd','Hedef',G[st.hd]||st.hd); if(st.gy) cp('gy','TÜBİTAK',st.gy+' '+(GY[st.gy]?GY[st.gy][0]:'')); if(st.nw) cp('nw','Yeni','son eklenenler'); if(st.vx) cp('vx','Tür','var olanı geliştiren');
+    $('achips').innerHTML=ch.join('');
+    var QK=[['pq','t','İlk 10',function(i){return !!i.tp}],['pq','h','Hızlı başlangıç',function(i){return i.pq==='h'}],['e','1','Düşük efor',function(i){return i.e===1}],['nw','1','Yeni',function(i){return !!i.nw}],['vx','1','Var olanı geliştiren',function(i){return !!i.v&&!i.vn}]];
+    $('quick').innerHTML='<span>Hızlı süzgeç</span>'+QK.map(function(q){var n=I.filter(q[3]).length; return n?'<button type="button" data-qk="'+q[0]+'" data-qv="'+q[1]+'" aria-pressed="'+(st[q[0]]===q[1])+'">'+esc(q[2])+'<b>'+n+'</b></button>':''}).join('');
+    var nm=['e','d','pq','gy'].filter(function(k){return st[k]}).length;
+    if(nm) $('moreb').hidden=false;
+    $('more').textContent=($('moreb').hidden?'Daha fazla süzgeç':'Süzgeçleri gizle')+(nm?' · '+nm:''); $('more').setAttribute('aria-expanded',String(!$('moreb').hidden));
+    [].forEach.call(document.querySelectorAll('[data-lay]'),function(x){x.setAttribute('aria-pressed',String(st.lay===x.dataset.lay))});
+    $('grid').className='grid'+(st.lay==='list'&&r.length?' list':'');
+    if(!r.length){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1"><p>Bu seçime uyan fikir yok. Bir süzgeci kaldırın ya da hepsini temizleyin.</p>'+emptyHelp()+'<button class="btn sm pri" type="button" data-clrall="1">Süzgeçleri temizle</button></div>'; logMiss(); return}
+    if(st.lay==='list'){$('grid').innerHTML=r.map(function(i){var on=has(i.id);
+      return '<article class="row'+(on?' in':'')+'"><div><h3>'+esc(i.n)+'</h3>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'</div><p>'+esc(i.o)+'</p>'+
+        '<div class="pills">'+tpill(i)+(i.nw?'<span class="pill nw">Yeni</span>':'')+'<span class="pill e'+i.e+'">'+E[i.e]+' efor</span><span class="pill">'+DS[i.d]+'</span></div>'+
+        '<div class="ra"><button type="button" class="btn sm" data-open="'+i.id+'">Ayrıntı</button><button type="button" class="btn sm'+(on?' on':' pri')+'" data-tog="'+i.id+'" aria-pressed="'+on+'">'+(on?'✓ İlgimi çekti':'İlgimi çekti')+'</button></div></article>'}).join(''); return}
+    $('grid').innerHTML=r.map(function(i){var on=has(i.id);
+      return '<article class="card'+(on?' in':'')+'"><span class="th">'+esc(F[i.f])+'</span><h3>'+esc(i.n)+'</h3>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<p>'+esc(i.o)+'</p>'+
+        '<div class="pills">'+tpill(i)+(i.nw?'<span class="pill nw">Yeni</span>':'')+'<span class="pill e'+i.e+'">'+E[i.e]+' efor</span><span class="pill">'+DS[i.d]+'</span><span class="pill">'+esc(B[i.b])+'</span>'+stat(i)+'</div>'+
+        '<div class="foot"><button type="button" class="btn sm" data-open="'+i.id+'">Ayrıntı</button><button type="button" class="btn sm'+(on?' on':' pri')+'" data-tog="'+i.id+'" aria-pressed="'+on+'">'+(on?'✓ İlgimi çekti':'İlgimi çekti')+'</button></div></article>';
+    }).join('');
+  }
+
+  /* detail */
+  var cur=null, dPrev=null, dNext=null, dPushed=false;
+  function ideaLink(id){return HERE+'#f-'+id}
+  function openDetail(id){
+    var i=byId[id]; if(!i) return; cur=id; var on=has(id); bump(id,'ac');
+    var rel=[]; P.forEach(function(p){if(!p.five&&p.st.some(function(s){return !s[1]&&s[0]===id})) rel.push(p)});
+    var L=rows().map(function(x){return x.id}), ix=L.indexOf(id); if(ix<0){L=I.map(function(x){return x.id}); ix=L.indexOf(id)}
+    dPrev=L[(ix-1+L.length)%L.length]; dNext=L[(ix+1)%L.length];
+    var h='<div class="dtop"><div class="dnav">'+(L.length>1?'<button class="btn sm" type="button" data-open="'+dPrev+'" aria-label="Önceki fikir">‹ Önceki</button><span>'+(ix+1)+' / '+L.length+'</span><button class="btn sm" type="button" data-open="'+dNext+'" aria-label="Sonraki fikir">Sonraki ›</button>':'')+'</div><button class="btn sm" type="button" data-close>Kapat</button></div>'+
+      '<div class="head"><p class="eyebrow">'+esc(F[i.f])+'</p><h2 id="d-h">'+esc(i.n)+'</h2>'+(i.t?'<span class="tn" style="font-size:16px;margin-top:0">'+esc(i.t)+'</span>':'')+'</div>'+
+      '<p class="lead" style="font-size:16.5px">'+esc(i.l||i.o)+'</p>'+
+      '<div class="pills"><span class="pill e'+i.e+'">'+E[i.e]+' efor</span><span class="pill">'+esc(D[i.d])+'</span>'+i.k.split('').map(function(c){return '<span class="pill">'+esc(K[c])+'</span>'}).join('')+stat(i)+'</div>'+
+      '<dl class="kv">'+
+        (i.g?'<div><dt>Hedef</dt><dd>'+esc(i.g)+'</dd></div>':'')+
+        (i.fs?'<div><dt>İlk adım</dt><dd>'+esc(i.fs)+'</dd></div>':'')+
+        (i.kp?'<div><dt>Asıl ölçüt</dt><dd>'+esc(i.kp)+'</dd></div>':'')+
+        '<div><dt>'+(i.v?(i.vn?'Not':'Var olanla ilişkisi'):'Türü')+'</dt><dd>'+esc(i.v||'Yeni fikir')+'</dd></div>'+
+      '</dl>';
+    h+='<div class="blk"><span class="lbl">Öncelik</span><div class="pills">'+tpill(i)+'<span class="pill">'+esc(QN[i.pq])+'</span><span class="pill">Etki: '+esc(IM[i.im])+'</span>'+i.hd.map(function(c){return G[c]?'<span class="pill">'+esc(G[c])+'</span>':''}).join('')+'</div><p class="note">'+esc(i.wy||QD[i.pq])+'</p></div>';
+    if(i.gy&&i.gy.length) h+='<div class="blk"><span class="lbl">TÜBİTAK endeksi</span><div class="pills">'+i.gy.map(function(c){return GY[c]?'<span class="pill">'+c+' · '+esc(GY[c][0])+'</span>':''}).join('')+'</div><p class="note">Bu fikrin çıktısı, TÜBİTAK Girişimci ve Yenilikçi Üniversite Endeksi’nde bu göstergelerde sayılabilir.</p></div>';
+    if(i.ev) h+='<div class="ev"><span class="lbl">Dünyada bir benzeri · '+esc(i.ev[1])+'</span><b>'+esc(i.ev[0])+'</b><p class="note">'+esc(i.ev[2])+' Birebir aynısı değil; fikre yakın bir uygulama.</p><a href="'+esc(i.ev[3])+'" target="_blank" rel="noopener">Kaynağı aç →</a></div>';
+    if(i.r&&i.r.length) h+='<div class="blk"><span class="lbl">Kimlerle birlikte?</span><div class="roles">'+i.r.map(function(r,x){return '<div class="r'+(x?'':' me')+'">'+esc(r[0])+'</div><div class="x2">'+esc(r[1])+'</div>'}).join('')+'</div><p class="note">Bu dağılım bir öneridir; görevler ve sahiplik ilgili birimlerle birlikte netleşir.</p></div>';
+    else h+='<div class="blk"><span class="lbl">Birlikte</span><p>'+esc(B[i.b])+'</p></div>';
+    rel.forEach(function(p){h+='<div class="blk"><span class="lbl">'+esc(p.t)+'</span><div class="steps">'+p.st.map(function(s,si){return (si?'<i>→</i>':'')+(s[1]?'<span class="tag ex">'+esc(s[0])+'</span>':'<button type="button" class="tag'+(s[0]===id?' in':'')+'" data-open="'+s[0]+'">'+esc(byId[s[0]].n)+'</button>')}).join('')+'</div></div>'});
+    h+='<div class="acts"><button type="button" class="btn'+(on?' on':' pri')+'" data-tog="'+id+'" aria-pressed="'+on+'">'+(on?'✓ İlgimi çekti · geri al':'İlgimi çekti')+'</button>'+(i.u?'<a class="btn" href="'+esc(link(i.u))+'" target="_blank" rel="noopener">'+(i.pg?'Program dosyasını aç →':'Sunumu aç →')+'</a>':'')+'<button type="button" class="btn" data-copy="'+id+'">Bağlantıyı kopyala</button>'+'<a class="btn" href="cikti.html#s-'+id+'">Yazdır / PDF</a></div><p class="ok" id="d-ok" aria-live="polite"></p>';
+    $('d-body').innerHTML=h; $('d-body').scrollTop=0;
+    if(!$('detail').open) $('detail').showModal();
+    setTitle(i.n);
+    if(location.hash!=='#f-'+id) try{if(/^#f-/.test(location.hash||'')) history.replaceState(null,'','#f-'+id); else {history.pushState(null,'','#f-'+id); dPushed=true}}catch(e){}
+  }
+  $('detail').addEventListener('close',function(){setTitle(vTitle()); if(/^#f-/.test(location.hash||'')){if(dPushed){dPushed=false; try{history.back()}catch(e){}} else try{history.replaceState(null,'','#'+view)}catch(e){}} dPushed=false});
+
+  /* basket */
+  function message(){
+    var l=['Fikir Sepeti\'nden seçtiklerim ('+basket.length+' fikir)',''];
+    basket.forEach(function(id,x){var i=byId[id]; l.push((x+1)+'. '+i.n+(i.t?' ('+i.t+')':'')+': '+i.o)});
+    var nm=$('b-name').value.trim(), nt=$('b-note').value.trim(), un=unitName($('b-unit').value);
+    if(nm||nt||un) l.push('');
+    if(un) l.push('Birim: '+un);
+    if(nm) l.push('Gönderen: '+nm);
+    if(nt) l.push('Not: '+nt);
+    l.push('');l.push('Sepet bağlantısı: '+HERE+'#s-'+basket.join('-'));
+    return l.join('\n');
+  }
+  function drawBasket(){
+    $('ct').textContent=basket.length;
+    var n=basket.length; $('b-empty').hidden=!!n; $('b-full').hidden=!n; $('b-cmp').hidden=n<2; if(!n) return;
+    var its=basket.map(function(id){return byId[id]});
+    $('b-list').innerHTML=its.map(function(i){return '<li><button type="button" class="nm" data-open="'+i.id+'">'+esc(i.n+(i.t?' · '+i.t:''))+'<small>'+esc(i.o)+'</small></button><button type="button" class="rmv" data-tog="'+i.id+'" aria-label="'+esc(i.n)+' fikrini sepetten çıkar">×</button></li>'}).join('');
+    var ec=[1,2,3].map(function(e){return its.filter(function(i){return i.e===e}).length});
+    $('b-stack').innerHTML=ec.map(function(c,x){return c?'<i style="width:'+(c/n*100)+'%;background:'+EC[x+1]+'"></i>':''}).join('');
+    $('b-leg').innerHTML=ec.map(function(c,x){return '<span style="--c:'+EC[x+1]+'">'+E[x+1]+' efor: '+c+'</span>'}).join('');
+    $('b-when').innerHTML=[1,2,3].map(function(d){var x=its.filter(function(i){return i.d===d});return '<div><b>'+esc(D[d])+'</b>'+(x.length?x.map(function(i){return '<span>'+esc(i.n)+'</span>'}).join(''):'<span style="color:var(--muted)">Bu dönemde fikir yok</span>')+'</div>'}).join('');
+    var uc={}; its.forEach(function(i){uc[i.b]=(uc[i.b]||0)+1});
+    $('b-units').innerHTML=Object.keys(uc).sort(function(a,b){return uc[b]-uc[a]}).map(function(b){return '<span class="pill">'+esc(B[b])+' · '+uc[b]+'</span>'}).join('');
+    var kc={}; its.forEach(function(i){i.k.split('').forEach(function(c){kc[c]=(kc[c]||0)+1})});
+    $('b-aud').innerHTML=Object.keys(kc).sort(function(a,b){return kc[b]-kc[a]}).map(function(c){return '<span class="pill">'+esc(K[c])+' · '+kc[c]+'</span>'}).join('');
+    $('msg').value=message();
+  }
+  function drawLive(){
+    var L=I.filter(function(i){return i.s==='Başladı'||i.s==='Birim sahiplendi'}).sort(function(a,b){return (a.s==='Başladı'?0:1)-(b.s==='Başladı'?0:1)||a.n.localeCompare(b.n,'tr')});
+    $('live').hidden=!L.length; if(!L.length) return;
+    $('live-grid').innerHTML=L.map(function(i){return '<article class="card"><span class="th">'+esc(F[i.f])+'</span><h3>'+esc(i.n)+'</h3>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<p>'+esc(i.o)+'</p>'+
+      '<div class="pills"><span class="pill s">'+esc(i.s)+'</span><span class="pill">'+esc(i.sn||B[i.b])+'</span></div>'+
+      '<div class="foot"><button type="button" class="btn sm" data-open="'+i.id+'">Ayrıntı</button></div></article>'}).join('');
+  }
+  function drawPg(){
+    var L=I.filter(function(i){return i.pg}); $('programlar').hidden=!L.length;
+    $('pg-grid').innerHTML=L.map(function(i){var on=has(i.id);return '<article class="card'+(on?' in':'')+'"><span class="th">'+esc(F[i.f])+'</span><h3>'+esc(i.n)+'</h3>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<p>'+esc(i.o)+'</p><div class="pills">'+tpill(i)+'<span class="pill e'+i.e+'">'+E[i.e]+' efor</span><span class="pill">'+esc(B[i.b])+'</span></div><div class="foot"><button type="button" class="btn sm" data-open="'+i.id+'">Ayrıntı</button><button type="button" class="btn sm'+(on?' on':' pri')+'" data-tog="'+i.id+'" aria-pressed="'+on+'">'+(on?'✓ İlgimi çekti':'İlgimi çekti')+'</button></div></article>'}).join('');
+  }
+  function refresh(){drawLive();drawPg();drawPacks();draw();drawBasket();drawPrio(); if($('cmp').open) drawCmp(); if($('detail').open&&cur) openDetail(cur)}
+
+  /* events */
+  document.addEventListener('click',function(ev){
+    var t=ev.target.closest('[data-open],[data-tog],[data-pack],[data-set],[data-mx],[data-close],[data-who],[data-calf],[data-go],[data-th],[data-clr],[data-lay],[data-copy],[data-qk],[data-stat],[data-clrall]'); if(!t) return;
+    if(t.dataset.clrall){$('clear').click();return}
+    if(t.dataset.qk){var qk=t.dataset.qk; st[qk]=st[qk]===t.dataset.qv?'':t.dataset.qv; draw();drawViz();return}
+    if(t.dataset.stat){var sk=t.dataset.stat; if(sk==='theme'){go('veri');return} st.q=st.f=st.k=st.b=st.e=st.d=st.pq=st.hd=st.gy=st.nw=st.vx='';$('q').value='';$('gq').value=''; if(sk==='low') st.e='1'; if(sk==='build') st.vx='1'; if(sk==='quick') st.pq='h'; draw();drawViz(); go('raf');return}
+    if(t.dataset.clr){var c=t.dataset.clr; st[c]=''; if(c==='q'){$('q').value='';$('gq').value=''} draw();drawViz();return}
+    if(t.dataset.lay){st.lay=t.dataset.lay; save('fs-lay',st.lay); draw();return}
+    if(t.dataset.copy&&navigator.share&&window.matchMedia&&matchMedia('(pointer:coarse)').matches){var shi=byId[+t.dataset.copy];navigator.share({title:shi?shi.n:document.title,url:ideaLink(t.dataset.copy)}).catch(function(){});return}
+    if(t.dataset.copy){var u=ideaLink(t.dataset.copy), ok=function(){$('d-ok').textContent='Bağlantı kopyalandı. Bu bağlantıyı açan kişi doğrudan bu fikri görür.'}, fb=function(){$('d-ok').innerHTML='Bağlantıyı seçip kopyalayın: <input class="cpy" readonly value="'+esc(u)+'">'; var x=$('d-ok').querySelector('input'); x.focus(); x.select()}; try{navigator.clipboard.writeText(u).then(ok,fb)}catch(e){fb()} return}
+    if(t.dataset.go){ev.preventDefault();go(t.dataset.go);return}
+    if(t.dataset.th){st.f=(view==='raf'&&st.f===t.dataset.th)?'':t.dataset.th; draw();drawViz(); go('raf');return}
+    if(t.dataset.calf){st.calf=t.dataset.calf;drawCal();return}
+    if(t.dataset.who){st.k=st.k===t.dataset.who?'':t.dataset.who; draw();drawViz(); go('raf');return}
+    if(t.dataset.close!==undefined){t.closest('dialog').close();return}
+    if(t.dataset.open){if($('basket').open) $('basket').close(); openDetail(+t.dataset.open);return}
+    if(t.dataset.tog){toggle(+t.dataset.tog);return}
+    if(t.dataset.pack){addMany(P[+t.dataset.pack].st.filter(function(s){return !s[1]}).map(function(s){return s[0]}));return}
+    if(t.dataset.set){var k=t.dataset.set; st[k]=st[k]===t.dataset.v?'':t.dataset.v; draw();drawViz(); go('raf');return}
+    if(t.dataset.mx){var p=t.dataset.mx.split('-'); if(st.e===p[0]&&st.d===p[1]){st.e='';st.d=''}else{st.e=p[0];st.d=p[1]} draw();drawViz(); go('raf');return}
+  });
+  ['detail','basket'].forEach(function(id){$(id).addEventListener('click',function(ev){if(ev.target===this) this.close()})});
+  $('open-basket').addEventListener('click',function(){$('b-ok').textContent='';drawBasket();$('basket').showModal()});
+  $('q').addEventListener('input',function(){st.q=this.value;$('gq').value=this.value;draw()});
+  $('gq').addEventListener('input',function(){st.q=this.value;$('q').value=this.value; if(view!=='raf') go('raf'); draw()});
+  $('gq').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault(); if(view!=='raf') go('raf')}});
+  $('more').addEventListener('click',function(){$('moreb').hidden=!$('moreb').hidden; draw()});
+  document.addEventListener('keydown',function(ev){
+    var tag=(document.activeElement&&document.activeElement.tagName)||'';
+    if($('detail').open&&(ev.key==='ArrowLeft'||ev.key==='ArrowRight')&&!/INPUT|TEXTAREA|SELECT/.test(tag)){ev.preventDefault(); openDetail(ev.key==='ArrowLeft'?dPrev:dNext); return}
+    if(ev.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(tag)&&!document.querySelector('dialog[open]')){ev.preventDefault(); if(window.innerWidth>700) $('gq').focus(); else {go('raf'); $('q').focus()}}
+  });
+  $('sort').addEventListener('change',function(){st.sort=this.value;draw()});
+  $('top-all').addEventListener('click',function(){addMany(I.filter(function(i){return i.tp}).map(function(i){return i.id}))});
+  $('clear').addEventListener('click',function(){st.q=st.f=st.k=st.b=st.e=st.d=st.pq=st.hd=st.gy=st.nw=st.vx='';$('q').value='';$('gq').value='';draw();drawViz()});
+  $('b-unit').innerHTML='<option value="">Seçin (isteğe bağlı)</option>'+Object.keys(B).map(function(c){return '<option value="'+c+'">'+esc(B[c])+'</option>'}).join('')+'<option value="dis">'+esc(OUT)+'</option>';
+  ['b-unit','b-name','b-note'].forEach(function(id){$(id).value=load('fs-'+id,'');$(id).addEventListener(id==='b-unit'?'change':'input',function(){save('fs-'+id,this.value);$('msg').value=message()})});
+  $('b-clear').addEventListener('click',function(){basket=[];save('fs-basket',basket);refresh()});
+  $('b-copy').addEventListener('click',function(){
+    var m=$('msg'), done=function(){$('b-ok').textContent='Özet kopyalandı. E-posta ya da mesaja yapıştırabilirsiniz.'}, fb=function(){m.focus();m.select();$('b-ok').textContent='Özet seçildi; kopyalamak için Ctrl/⌘ + C kullanın.'};
+    try{navigator.clipboard.writeText(m.value).then(done,fb)}catch(e){fb()}
+  });
+
+  /* a basket arriving by link: #s-1-5-23 */
+  var sharedIds=[];
+  function readHash(){
+    var m=/^#s-([0-9-]+)$/.exec(location.hash||''); sharedIds=m?m[1].split('-').map(Number).filter(function(id){return byId[id]}):[];
+    var fresh=sharedIds.filter(function(id){return !has(id)});
+    $('shared').hidden=!sharedIds.length;
+    if(sharedIds.length){$('shared-t').textContent='Bu bağlantı '+sharedIds.length+' fikirlik bir sepet taşıyor: '+sharedIds.map(function(id){return byId[id].n}).join(', ')+'.'; $('shared-add').hidden=!fresh.length}
+  }
+  $('shared-add').addEventListener('click',function(){addMany(sharedIds);$('shared-add').hidden=true;$('b-ok').textContent='';$('basket').showModal()});
+  $('shared-x').addEventListener('click',function(){$('shared').hidden=true});
+  function onNav(){
+    readHash(); var h=(location.hash||'').slice(1), fm=/^f-(\d+)$/.exec(h);
+    if(fm&&byId[+fm[1]]){openDetail(+fm[1]);return}
+    if($('detail').open){dPushed=false;$('detail').close()}
+    if(h==='raf'||/^raf-/.test(h)){if(view!=='raf') go('raf',true); if(h!==rafHash()) applyRaf(h); return}
+    if(VIEWS.some(function(x){return x[0]===h})){if(h!==view) go(h,true)} else if(!h&&view!=='genel') go('genel',true);
+  }
+  document.addEventListener('click',function(ev){var t=ev.target.closest('[data-sq]'); if(!t) return; st.q=t.dataset.sq; $('q').value=st.q; $('gq').value=st.q; draw(); drawViz()});
+  $('rlink').addEventListener('click',function(){var b=this, u=(typeof HERE!=='undefined'?HERE:A+SELF)+'#'+rafHash(), done=function(){b.textContent='Bağlantı kopyalandı ✓'; setTimeout(function(){b.textContent='Bu listenin bağlantısı'},2200)};
+    var fb=function(){try{var x=document.createElement('textarea'); x.value=u; document.body.appendChild(x); x.select(); document.execCommand('copy'); x.remove(); done()}catch(e){prompt('',u)}};
+    try{navigator.clipboard.writeText(u).then(done,fb)}catch(e){fb()}});
+  $('b-cmp').addEventListener('click',function(){drawCmp(); if(basket.length>1&&!$('cmp').open) $('cmp').showModal()});
+  $('cmp').addEventListener('click',function(ev){if(ev.target===this) this.close()});
+  (function(){var m0=document.documentElement.getAttribute('data-fs')==='light'?'light':'dark'; try{if(localStorage.getItem('fs-theme')==='light') m0='light'}catch(e){} setTheme(m0)})();
+  $('theme').addEventListener('click',function(){setTheme(document.documentElement.getAttribute('data-fs')==='light'?'dark':'light')});
+  window.addEventListener('hashchange',onNav); window.addEventListener('popstate',onNav);
+  $('skip').addEventListener('click',function(ev){ev.preventDefault(); var hd=document.querySelector('.wrap [data-view="'+view+'"] h1,.wrap [data-view="'+view+'"] h2'); if(hd){hd.setAttribute('tabindex','-1'); try{hd.focus()}catch(e){}}});
+  (function(){var tt=$('totop'), tk=function(){tt.classList.toggle('on',(window.scrollY||window.pageYOffset||0)>900)}; window.addEventListener('scroll',tk,{passive:true}); tk();
+    tt.addEventListener('click',function(){try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)} var b=document.querySelector('a.brand'); if(b) try{b.focus({preventScroll:true})}catch(e){}})})();
+
+  var T_LOAD=Date.now();
+  function spam(hp){if($(hp).value||Date.now()-T_LOAD<3000) return 'bot'; try{var l=+localStorage.getItem('fs-last-send')||0; if(Date.now()-l<60000) return 'wait'}catch(e){} return ''}
+  function sent(){try{localStorage.setItem('fs-last-send',String(Date.now()))}catch(e){}}
+  $('b-send').addEventListener('click',function(){
+    var bt=this; if(!basket.length) return; var sp=spam('b-hp');
+    if(sp==='bot'){$('b-ok').textContent='Sepetiniz iletildi. Teşekkürler; en kısa zamanda sizinle iletişime geçilecek.';return}
+    if(sp==='wait'){$('b-ok').textContent='Az önce bir gönderim yaptınız; lütfen bir dakika sonra yeniden deneyin.';return} bt.disabled=true; $('b-ok').textContent='Gönderiliyor…';
+    Store.sendBasket({ids:basket.slice(),names:basket.map(function(id){return byId[id].n}),birim:$('b-unit').value,ad:$('b-name').value.trim().slice(0,120),not:$('b-note').value.trim().slice(0,600)}).then(function(){
+      sent(); bt.disabled=false; $('b-ok').textContent='Sepetiniz iletildi. Teşekkürler; en kısa zamanda sizinle iletişime geçilecek.';
+    },function(){
+      bt.disabled=false; $('b-ok').textContent='Sepet gönderilemedi. Bağlantınızı kontrol edip yeniden deneyin ya da özeti kopyalayıp kendiniz iletin.';
+    });
+  });
+  /* boot */
+  fill('f-f',F,'f');fill('f-k',K,'k',true);fill('f-b',B,'b');fill('f-e',E,'e');fill('f-d',D,'d');
+  $('f-pq').innerHTML='<option value="">Hepsi ('+I.length+')</option><option value="t">İlk 10 (10)</option>'+Object.keys(QN).map(function(c){return '<option value="'+c+'">'+esc(QN[c])+' ('+I.filter(function(i){return i.pq===c}).length+')</option>'}).join('');
+  $('f-pq').addEventListener('change',function(){st.pq=this.value;draw();drawViz()});
+  $('f-gy').innerHTML='<option value="">Hepsi ('+I.length+')</option>'+Object.keys(GY).filter(function(c){return I.some(function(i){return (i.gy||[]).indexOf(c)>-1})}).map(function(c){return '<option value="'+c+'">'+c+' · '+esc(GY[c][0])+' ('+I.filter(function(i){return (i.gy||[]).indexOf(c)>-1}).length+')</option>'}).join('');
+  $('f-gy').addEventListener('change',function(){st.gy=this.value;draw();drawViz()});
+  $('s-quick').textContent=I.filter(function(i){return i.pq==='h'}).length;
+  drawCal();
+  $('s-all').textContent=I.length;
+  $('s-low').textContent=I.filter(function(i){return i.e===1}).length;
+  $('s-build').textContent=I.filter(function(i){return i.v&&!i.vn}).length;
+  $('s-theme').textContent=Object.keys(F).filter(function(f){return I.some(function(i){return String(i.f)===f})}).length;
+  /* a link prepared for one unit: ?birim=mta */
+  var UQ=''; try{UQ=new URLSearchParams(location.search).get('birim')||''}catch(e){}
+  if(B[UQ]){
+    st.b=UQ; if(!$('b-unit').value){$('b-unit').value=UQ; save('fs-b-unit',UQ)}
+    $('unitnote-t').textContent='Bu bağlantı '+B[UQ]+' için hazırlandı. Biriminizin yürüttüğü ya da ortak olduğu '+I.filter(function(i){return inB(i,UQ)}).length+' fikir gösteriliyor; biriminizin yürüttükleri en üstte.';
+    $('unitnote-pk').hidden=true;
+    $('unitnote').hidden=false;
+  }
+  $('b-print').addEventListener('click',function(){this.href='cikti.html'+(basket.length?'#s-'+basket.join('-'):'')});
+  $('lang').addEventListener('click',function(){this.href=this.href.split('#')[0]+(location.hash||'')});
+  $('unitnote-x').addEventListener('click',function(){st.b='';$('unitnote').hidden=true;draw();drawViz()});
+  /* fikir öner */
+  $('o-u').innerHTML=$('b-unit').innerHTML;
+  $('open-oner').addEventListener('click',function(){$('o-ok').textContent='';$('o-u').value=$('b-unit').value;$('o-n').value=$('b-name').value;$('oneri').showModal()});
+  $('oneri').addEventListener('click',function(ev){if(ev.target===this) this.close()});
+  $('o-form').addEventListener('submit',function(ev){
+    ev.preventDefault(); var t=$('o-t').value.trim(), d=$('o-d').value.trim(), bt=this.querySelector('[type=submit]');
+    if(!t||!d){$('o-ok').textContent='Fikrin adını ve kısa açıklamasını yazın.';return}
+    var sp=spam('o-hp'); if(sp==='bot'){$('o-ok').textContent='Öneriniz iletildi. Teşekkürler; birlikte değerlendirip size dönülecek.';return}
+    if(sp==='wait'){$('o-ok').textContent='Az önce bir gönderim yaptınız; lütfen bir dakika sonra yeniden deneyin.';return}
+    bt.disabled=true; $('o-ok').textContent='Gönderiliyor…';
+    Store.sendSuggestion({baslik:t.slice(0,80),aciklama:d.slice(0,900),birim:$('o-u').value,ad:$('o-n').value.trim().slice(0,120)}).then(function(){
+      sent(); bt.disabled=false; $('o-t').value=''; $('o-d').value=''; $('o-ok').textContent='Öneriniz iletildi. Teşekkürler; birlikte değerlendirip size dönülecek.';
+    },function(){bt.disabled=false; $('o-ok').textContent='Öneri gönderilemedi. Bağlantınızı kontrol edip yeniden deneyin.'});
+  });
+  drawViz();refresh();readHash();
+  initView();
+}
+var BOOTED=0,BT=0;function go1(l){if(BOOTED)return;BOOTED=1;clearTimeout(BT);var lb=document.getElementById("ldbar");if(lb)lb.remove();Gate.open();boot(l)}
+function run(){BT=setTimeout(function(){go1(SEED.ideas.slice())},6000);
+Store.listIdeas().then(function(l){l=(l||[]).slice();var h={};l.forEach(function(x){h[x.id]=1});SEED.ideas.forEach(function(x){if(!h[x.id])l.push(x)});go1(l)},function(){go1(SEED.ideas.slice())});}
+Gate.start("tr",function(c){SEED.ideas=c.ideas||[];SEED.paths=c.paths||[];run()});
+(function(){
+  if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')) window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+  var dp=null, ib=document.getElementById('inst');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault(); dp=e; if(ib) ib.hidden=false});
+  window.addEventListener('appinstalled',function(){dp=null; if(ib) ib.hidden=true});
+  if(ib) ib.addEventListener('click',function(){if(!dp) return; dp.prompt(); dp.userChoice.then(function(){dp=null; ib.hidden=true})});
+})();
+</script>
+</body>
+</html>

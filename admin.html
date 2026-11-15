@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Fikir Sepeti · Yönetim</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+.login{max-width:420px;margin:8vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.err{color:var(--high);font-size:14px;min-height:1.3em}
+.sp{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.sp.done{opacity:.62}
+.sp .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.sp .who{font-weight:800;font-size:17px}
+.sp time{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.sp .nt{font-size:14.5px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:10px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.n{font-weight:800}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.form .wide{grid-column:1/-1}
+.form textarea{min-height:74px;resize:vertical}
+.chk{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.chk label{font-family:var(--display);font-size:14px;letter-spacing:0;text-transform:none;color:var(--fg);display:flex;gap:6px;align-items:center}
+.chk input{width:auto}
+.danger{border-color:var(--high);color:var(--high)}
+</style>
+</head>
+<body>
+<div class="demo" id="demo" hidden>Deneme modu: veritabanı bağlı değil. Her e-posta ile ve “demo” parolasıyla girilebilir; veriler yalnızca bu tarayıcıda saklanır.</div>
+
+<div id="v-login" class="gut" hidden>
+  <form class="login" id="login">
+    <p class="eyebrow">Fikir Sepeti · Yönetim</p>
+    <h2>Yönetici girişi</h2>
+    <div class="fld"><label for="em">E-posta</label><input id="em" type="email" autocomplete="username" required></div>
+    <div class="fld"><label for="pw">Parola</label><input id="pw" type="password" autocomplete="current-password" required></div>
+    <p class="err" id="lerr" aria-live="polite"></p>
+    <button class="btn pri" type="submit">Giriş yap</button>
+    <a href="index.html" class="note">← Fikir Sepeti'ne dön</a>
+  </form>
+</div>
+
+<div id="v-app" hidden>
+  <div class="bar"><div class="in gut">
+    <div class="brand">Fikir <span>Sepeti</span> · Yönetim</div>
+    <div class="acts"><button class="btn sm" id="backup" type="button" title="Gelen sepetler, öneriler, fikirler ve sayaçların tamamı tek dosyada">Tam yedek indir</button><a class="btn sm" href="index.html">Siteyi aç</a><button class="btn sm" id="out" type="button">Çıkış</button></div>
+  </div></div>
+  <div class="wrap gut" style="gap:28px">
+    <div class="tabs">
+      <button class="btn on" type="button" data-tab="sepet">Gelen sepetler <span class="ct" id="n-sepet">0</span></button>
+      <button class="btn" type="button" data-tab="oneri">Öneriler <span class="ct" id="n-oneri">0</span></button>
+      <button class="btn" type="button" data-tab="ozet">İlgi özeti</button>
+      <button class="btn" type="button" data-tab="fikir">Fikirler <span class="ct" id="n-fikir">0</span></button>
+      <button class="btn" type="button" data-tab="link">Birim bağlantıları</button>
+      <button class="btn" type="button" data-tab="davet">Davetliler <span class="ct" id="n-davet">0</span></button>
+      <button class="btn" type="button" data-tab="icerik">İçerik</button>
+    </div>
+    <p class="err" id="aerr" aria-live="polite"></p>
+
+    <section id="t-sepet">
+      <div class="head"><h2>Gelen sepetler</h2><p class="note">Siteden gönderilen sepetler, en yenisi üstte. Görüştüğünüz sepeti işaretleyin; silinen sepet geri getirilemez.</p><div class="acts"><button class="btn sm" id="x-sepet" type="button">Excel'e aktar</button></div></div>
+      <div class="list" id="baskets"></div>
+    </section>
+
+    <section id="t-oneri" hidden>
+      <div class="head"><h2>Fikir önerileri</h2><p class="note">Sitedeki “Fikir öner” formundan gelenler, en yenisi üstte. Beğendiğiniz öneriyi “Fikre dönüştür” ile listeye ekleyebilirsiniz.</p><div class="acts"><button class="btn sm" id="x-oneri" type="button">Excel'e aktar</button></div></div>
+      <div class="list" id="oneriler"></div>
+    </section>
+
+    <section id="t-ozet" hidden>
+      <div class="head"><h2>İlgi özeti</h2><p class="note">Gelen sepetlerde hangi fikir kaç kez seçildi ve ilgi hangi birimlerde toplandı.</p><div class="acts"><button class="btn sm" id="x-ozet" type="button">Fikir bazında tabloyu Excel'e aktar</button></div></div>
+      <div class="viz">
+        <div class="vc"><h3>En çok seçilen fikirler</h3><div class="bars" id="o-ideas"></div></div>
+        <div class="vc"><h3>Birimlere göre ilgi</h3><div class="bars" id="o-units"></div></div>
+      </div>
+      <div class="head"><h2>Hangi birim hangi fikri seçti?</h2><p class="note">Sepeti gönderen birime göre seçilen fikirler. Birim seçmeden gönderilen sepetler “Birimi belirtilmemiş” altında.</p></div>
+      <div class="list" id="o-byunit"></div>
+      <div class="head"><h2>Sitedeki ilgi</h2><p class="note">Sepet göndermeyenler dahil, isimsiz sayım: bir fikrin ayrıntısının kaç kez açıldığı ve kaç kez “İlgimi çekti” denildiği. Kim olduğu kaydedilmez.</p></div>
+      <div class="viz">
+        <div class="vc"><h3>En çok açılan fikirler</h3><div class="bars" id="o-ac"></div></div>
+        <div class="vc"><h3>En çok işaretlenen fikirler</h3><div class="bars" id="o-is"></div></div>
+      </div>
+      <div class="head"><h2>Ziyaret ve aramalar</h2><p class="note">Günlük ziyaret sayısı (bir tarayıcı bir günde bir kez sayılır) ve sitede aranıp hiç sonuç vermeyen kelimeler. Bulunamayan aramalar, insanların neyi aradığını ve yeni fikir ihtiyacını gösterir. Kim olduğu kaydedilmez.</p></div>
+      <div class="viz">
+        <div class="vc"><h3>Son 30 gün ziyaret</h3><p class="note" id="o-vt"></p><div class="bars" id="o-visit"></div></div>
+        <div class="vc"><h3>Sonuç vermeyen aramalar</h3><div class="bars" id="o-miss"></div></div>
+        <div class="vc"><h3>Sayfa hataları</h3><p class="note">Ziyaretçilerin tarayıcısında oluşan hatalar. Boşsa her şey yolunda.</p><div class="bars" id="o-err"></div></div>
+      </div>
+    </section>
+
+    <section id="t-link" hidden>
+      <div class="head"><h2>Birim bağlantıları</h2><p class="note">Her birime kendi bağlantısını gönderin. Bağlantıyı açan kişi önce o birimin yürüttüğü ya da ortak olduğu fikirleri görür; sepet formunda birimi de hazır seçili gelir.</p></div>
+      <div class="list" id="links"></div>
+    </section>
+
+    <section id="t-davet" hidden>
+      <div class="head"><h2>Davetliler</h2><p class="note">Siteye sakarya.edu.tr adresiyle giriş yapan herkes girebilir. Bu adresi olmayan kişileri (Teknokent firmaları, sanayiciler, bölge üniversiteleri) buraya e-postasıyla ekleyin. Kişi, Google hesabıyla ya da e-postasına gelen bağlantıyla girer. Daveti silerseniz erişimi hemen kapanır.</p></div>
+      <form class="meta" id="inv-form" style="align-items:flex-end;gap:10px;flex-wrap:wrap">
+        <div class="fld" style="flex:1 1 240px"><label for="inv-e">E-posta</label><input id="inv-e" type="email" required autocomplete="off" placeholder="ornek@firma.com.tr"></div>
+        <div class="fld" style="flex:1 1 200px"><label for="inv-a">Not (isteğe bağlı)</label><input id="inv-a" maxlength="80" autocomplete="off" placeholder="Örneğin: X Firması, Ar-Ge müdürü"></div>
+        <button class="btn pri" type="submit">Davet et</button>
+      </form>
+      <p class="note" id="inv-ok" aria-live="polite"></p>
+      <div class="list" id="inv-list"></div>
+    </section>
+
+    <section id="t-icerik" hidden>
+      <div class="head"><h2>Fikir içeriği</h2><p class="note">Fikirlerin tam metni sitenin dosyalarında değil, yalnızca giriş yapan üyelerin okuyabildiği veritabanında durur. Yeni fikirler eklendiğinde size verilen “fikir-sepeti-icerik.json” dosyasını buradan yükleyin; site hemen güncellenir. Bu dosyayı Netlify’a yüklemeyin.</p></div>
+      <div class="share"><p id="ic-now">Yüklü içerik denetleniyor…</p></div>
+      <div class="meta" style="gap:10px;flex-wrap:wrap;align-items:center"><label class="btn pri" for="ic-file" style="cursor:pointer">İçerik dosyasını seç ve yükle</label><input id="ic-file" type="file" accept="application/json,.json" hidden></div>
+      <p class="note" id="ic-ok" aria-live="polite"></p>
+    </section>
+
+    <section id="t-fikir" hidden>
+      <div class="head"><h2>Fikirler</h2><p class="note">Bir fikri düzenleyin, durumunu işaretleyin ya da yeni fikir ekleyin. Değişiklikler sitede hemen görünür.</p></div>
+      <div class="share" id="seed" hidden><p>Veritabanında henüz fikir yok. Site şu an hazır gelen başlangıç listesini gösteriyor. Düzenleyebilmek için bu listeyi veritabanına yükleyin.</p><div class="acts"><button class="btn pri sm" id="seed-go" type="button">Başlangıç listesini yükle</button></div></div>
+      <div class="share" id="sync" hidden><p id="sync-t"></p><div class="acts"><button class="btn pri sm" id="sync-go" type="button">Eksikleri ekle</button></div></div>
+      <div class="meta"><div class="fld" style="flex:1 1 240px"><label for="fq">Ara</label><input id="fq" type="search" autocomplete="off"></div><button class="btn pri" id="new" type="button">Yeni fikir</button></div>
+      <div class="tw"><table><thead><tr><th>Fikir</th><th>Tema</th><th>Efor</th><th>Durum</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+  </div>
+</div>
+
+<dialog id="edit" aria-labelledby="e-h"><form class="dl" id="eform">
+  <button class="btn sm x" type="button" data-close>Kapat</button>
+  <div class="head"><p class="eyebrow">Fikir</p><h2 id="e-h">Fikri düzenle</h2></div>
+  <div class="form">
+    <div class="fld wide"><label for="e-n">Ad</label><input id="e-n" required maxlength="80"></div>
+    <div class="fld wide"><label for="e-t">Türkçe ad (isteğe bağlı)</label><input id="e-t" maxlength="80" placeholder="İngilizce adın yanında görünür"></div>
+    <div class="fld wide"><label for="e-o">Tek cümlelik açıklama</label><input id="e-o" required maxlength="220"></div>
+    <div class="fld wide"><label for="e-l">Uzun açıklama</label><textarea id="e-l" maxlength="700"></textarea></div>
+    <div class="fld"><label for="e-f">Tema</label><select id="e-f"></select></div>
+    <div class="fld"><label for="e-b">Birlikte (birim)</label><select id="e-b"></select></div>
+    <div class="fld"><label for="e-e">Efor</label><select id="e-e"></select></div>
+    <div class="fld"><label for="e-d">Dönem</label><select id="e-d"></select></div>
+    <div class="fld wide"><label>Kime dokunuyor?</label><div class="chk" id="e-k"></div></div>
+    <div class="fld"><label for="e-s">Durum</label><select id="e-s"></select></div>
+    <div class="fld"><label for="e-sn">Durum notu</label><input id="e-sn" maxlength="60" placeholder="Örneğin: USİ birimi"></div>
+    <div class="fld wide"><label for="e-g">Hedef</label><input id="e-g" maxlength="220"></div>
+    <div class="fld"><label for="e-fs">İlk adım</label><input id="e-fs" maxlength="120"></div>
+    <div class="fld"><label for="e-kp">Asıl ölçüt</label><input id="e-kp" maxlength="120"></div>
+    <div class="fld wide"><label for="e-v">Var olanla ilişkisi</label><input id="e-v" maxlength="160"></div>
+    <div class="fld wide"><label for="e-u">Sunum bağlantısı</label><input id="e-u" maxlength="300" placeholder="https://…"></div>
+    <div class="fld wide"><label for="e-r">Kimlerle birlikte? (her satıra: Birim | Katkısı)</label><textarea id="e-r" maxlength="1200"></textarea></div>
+  </div>
+  <p class="err" id="eerr" aria-live="polite"></p>
+  <div class="acts"><button class="btn pri" type="submit">Kaydet</button><button class="btn danger" id="e-del" type="button">Fikri sil</button></div>
+</form></dialog>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script src="seed.js"></script>
+<script src="store.js"></script>
+<script>
+(function(){
+  var K=SEED.K,B=SEED.B,E=SEED.E,D=SEED.D,F=SEED.F,ST=SEED.S;
+  var $=function(id){return document.getElementById(id)};
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  var ideas=[], baskets=[], inDb=false, editing=null, armed=null, interest={}, sugg=[], sArmed=null, noSugg=false;
+  var BK=SEED.BK||{};
+  function inB(i,b){if(i.b===b) return true; if(b==='ok'||!BK[b]) return false; return (i.r||[]).some(function(r){return String(r[0]).indexOf(BK[b])===0})}
+  function unitName(c){return c==='dis'?SEED.OUT:(B[c]||'')}
+  $('demo').hidden=Store.mode!=='demo';
+  function fail(e){$('aerr').textContent='İşlem tamamlanamadı'+(e&&e.code?' ('+e.code+')':'')+'. Bağlantınızı ve yetkinizi kontrol edip yeniden deneyin.'}
+  function clearErr(){$('aerr').textContent=''}
+
+  /* giriş */
+  Store.onAuth(function(u){
+    $('v-login').hidden=!!u; $('v-app').hidden=!u;
+    if(u) loadAll();
+  });
+  $('login').addEventListener('submit',function(ev){
+    ev.preventDefault(); $('lerr').textContent='';
+    Store.signIn($('em').value.trim(),$('pw').value).catch(function(e){
+      $('lerr').textContent=(e&&/network/.test(e.code||''))?'Bağlantı kurulamadı. İnternetinizi kontrol edin.':'E-posta ya da parola hatalı.';
+    });
+  });
+  $('out').addEventListener('click',function(){Store.signOut()});
+
+  /* veri */
+  function loadSugg(){
+    if(!Store.listSuggestions) return;
+    Store.listSuggestions().then(function(l){sugg=l||[];noSugg=false;drawSugg()},function(e){sugg=[];noSugg=!!(e&&e.code==='permission-denied');drawSugg()});
+  }
+  function drawSugg(){
+    $('n-oneri').textContent=sugg.filter(function(s){return !s.done}).length;
+    if(!sugg.length){$('oneriler').innerHTML='<p class="empty">'+(noSugg?'Öneriler için Firebase kurallarının güncellenmesi gerekiyor.':'Henüz öneri yok. Sitedeki “Fikir öner” formundan gelen öneriler burada görünür.')+'</p>';return}
+    $('oneriler').innerHTML=sugg.map(function(s){
+      return '<article class="sp'+(s.done?' done':'')+'"><div class="top"><span class="who">'+esc(s.baslik)+'</span><time>'+esc(when(s.ts))+'</time></div>'+
+        '<p class="nt">'+esc(s.aciklama)+'</p><p class="note">'+esc([unitName(s.birim),s.ad].filter(Boolean).join(' · ')||'Adını yazmamış')+'</p>'+
+        '<div class="acts"><button type="button" class="btn sm'+(s.done?' on':'')+'" data-sdone="'+esc(s._id)+'">'+(s.done?'İncelendi · geri al':'İncelendi olarak işaretle')+'</button>'+
+        '<button type="button" class="btn sm pri" data-sconv="'+esc(s._id)+'">Fikre dönüştür</button>'+
+        '<button type="button" class="btn sm danger" data-sdel="'+esc(s._id)+'">'+(sArmed===s._id?'Emin misiniz? Sil':'Sil')+'</button></div></article>';
+    }).join('');
+  }
+  /* Excel (CSV, Türkçe Excel için noktalı virgül) */
+  function csv(name,rows){
+    var t='\ufeff'+rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);return /[";\n\r]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(';')}).join('\r\n');
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));
+    a.download='fikir-sepeti-'+name+'-'+new Date().toISOString().slice(0,10)+'.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+  }
+  $('backup').addEventListener('click',function(){var bt=this; bt.disabled=true; bt.textContent='Hazırlanıyor…';
+    var safe=function(p){return p.then(function(x){return x},function(e){return {hata:String(e&&e.code||e)}})};
+    Promise.all([safe(Store.listBaskets()),safe(Store.listSuggestions()),safe(Store.listIdeas()),safe(Store.listInterest())]).then(function(r){
+      var o={olusturma:new Date().toISOString(),kaynak:location.host,sepetler:r[0],oneriler:r[1],fikirler:r[2],sayaclar:r[3]};
+      var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}));
+      a.download='fikir-sepeti-yedek-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+      bt.disabled=false; bt.textContent='Tam yedek indir'});
+  });
+  function day(ts){if(!ts) return ''; try{return new Date(ts).toLocaleString('tr-TR')}catch(e){return ''}}
+  $('x-sepet').addEventListener('click',function(){
+    csv('sepetler',[['Tarih','Birim','Ad','Not','Fikir sayısı','Fikirler','Durum']].concat(baskets.map(function(b){
+      return [day(b.ts),unitName(b.birim),b.ad||'',b.not||'',(b.ids||[]).length,(b.ids||[]).map(function(id,x){return nameOf(id)||(b.names&&b.names[x])||id}).join(', '),b.done?'Görüşüldü':'Bekliyor']})));
+  });
+  $('x-ozet').addEventListener('click',function(){
+    var ic={}; baskets.forEach(function(b){(b.ids||[]).forEach(function(id){ic[id]=(ic[id]||0)+1})});
+    var r=ideas.map(function(i){var m=interest[i.id]||{};return [i.n,i.t||'',B[i.b]||'',i.s||'',ic[i.id]||0,m.ac||0,m.is||0]});
+    r.sort(function(a,b){return (b[4]-a[4])||(b[6]-a[6])||(b[5]-a[5])});
+    csv('ilgi',[['Fikir','Türkçe adı','Yürüten birim','Durum','Sepette seçilme','Ayrıntı açılma','İlgimi çekti']].concat(r));
+  });
+  $('x-oneri').addEventListener('click',function(){
+    csv('oneriler',[['Tarih','Fikrin adı','Açıklama','Birim','Ad','Durum']].concat(sugg.map(function(s){return [day(s.ts),s.baslik,s.aciklama,unitName(s.birim),s.ad||'',s.done?'İncelendi':'Bekliyor']})));
+  });
+  var CV='';
+  function drawContent(){var n=(SEED.ideas||[]).length; $('ic-now').textContent=n?('Yüklü içerik: '+n+' fikir · sürüm '+(CV||'–')+'.'):'Henüz içerik yüklenmedi. Site, içerik yüklenene kadar üyelere “İçerik henüz yüklenmedi” der.'}
+  function loadInv(){if(!Store.listInvites) return; Store.listInvites().then(function(l){l=(l||[]).sort(function(a,b){return (b.ts||0)-(a.ts||0)}); $('n-davet').textContent=l.length;
+    $('inv-list').innerHTML=l.length?l.map(function(x){return '<article class="sp"><div class="top"><span class="who">'+esc(x.email)+'</span><time>'+esc(x.ts?day(x.ts):'')+'</time></div>'+(x.ad?'<p>'+esc(x.ad)+'</p>':'')+'<div class="acts"><button class="btn sm danger" type="button" data-inv="'+esc(x.email)+'">Daveti sil</button></div></article>'}).join(''):'<p class="empty">Henüz davetli yok.</p>'}).catch(fail)}
+  $('inv-form').addEventListener('submit',function(ev){ev.preventDefault(); var e=$('inv-e').value.trim().toLowerCase(), n=$('inv-a').value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){$('inv-ok').textContent='Geçerli bir e-posta adresi yazın.';return}
+    if(/@sakarya\.edu\.tr$/.test(e)){$('inv-ok').textContent='sakarya.edu.tr adresleri davetsiz girebilir.';return}
+    Store.addInvite(e,n).then(function(){$('inv-e').value='';$('inv-a').value='';$('inv-ok').textContent=e+' davet edildi. Bu kişiye site adresini gönderin: '+location.href.split('#')[0].replace(/admin\.html.*$/,'');loadInv()}).catch(fail)});
+  $('ic-file').addEventListener('change',function(){var f=this.files&&this.files[0]; if(!f) return; var r=new FileReader();
+    r.onload=function(){var c; try{c=JSON.parse(r.result)}catch(e){$('ic-ok').textContent='Dosya okunamadı: geçerli bir içerik dosyası değil.';return}
+      if(!c||!c.tr||!c.tr.ideas||!c.tr.ideas.length){$('ic-ok').textContent='Bu dosyada fikir yok. Size verilen “fikir-sepeti-icerik.json” dosyasını seçin.';return}
+      $('ic-ok').textContent='Yükleniyor…';
+      Store.setContent('tr',c.tr,c.v).then(function(){return c.en?Store.setContent('en',c.en,c.v):null}).then(function(){$('ic-ok').textContent=c.tr.ideas.length+' fikir yüklendi (sürüm '+(c.v||'–')+'). Site hemen güncellendi.';$('ic-file').value='';loadAll()}).catch(function(e){$('ic-ok').textContent='Yüklenemedi'+(e&&e.code?' ('+e.code+')':'')+'. Firebase kurallarının güncel olduğundan emin olun.'})};
+    r.readAsText(f)});
+  function loadAll(){
+    clearErr(); loadSugg(); loadInv();
+    (Store.getContent?Store.getContent('tr').then(function(c){SEED.ideas=c.ideas||[];SEED.paths=c.paths||[];CV=c.v||''},function(){SEED.ideas=[];SEED.paths=[];CV=''}):Promise.resolve()).then(function(){drawContent(); return Store.listIdeas()}).then(function(l){inDb=!!(l&&l.length); ideas=inDb?l:SEED.ideas.slice(); drawIdeas(); return Store.listBaskets()})
+      .then(function(b){baskets=b||[]; drawBaskets(); drawSummary(); drawLinks(); return Store.listInterest?Store.listInterest():{}})
+      .then(function(m){interest=m||{}; drawInterest()},function(e){if(e&&e.code==='permission-denied'){interest={};drawInterest(true)}else fail(e)});
+  }
+  /* başlangıç listesiyle karşılaştırma: eksik fikirler ve eksik Türkçe adlar */
+  function diff(){
+    var byI={}, byN={}, mx=0, add=[], fix=[];
+    ideas.forEach(function(i){byI[i.id]=i; byN[i.n]=i; mx=Math.max(mx,i.id)});
+    SEED.ideas.forEach(function(s){
+      var d=byI[s.id];
+      if(d&&d.n===s.n){ if(d.t===undefined&&s.t){var c=JSON.parse(JSON.stringify(d)); c.t=s.t; fix.push(c)} return }
+      if(byN[s.n]) return;
+      var c2=JSON.parse(JSON.stringify(s)); if(d) c2.id=++mx; add.push(c2);
+    });
+    return {add:add,fix:fix};
+  }
+  function drawSync(){
+    var d=inDb?diff():{add:[],fix:[]}, p=[];
+    if(d.add.length) p.push(d.add.length+' yeni fikir veritabanında yok ('+d.add.slice(0,4).map(function(i){return i.n}).join(', ')+(d.add.length>4?' ve diğerleri':'')+')');
+    if(d.fix.length) p.push(d.fix.length+' fikrin Türkçe adı eksik');
+    $('sync').hidden=!p.length;
+    $('sync-t').textContent='Başlangıç listesi güncellendi: '+p.join('; ')+'. “Eksikleri ekle” yalnızca eksikleri tamamlar; sizin yaptığınız düzenlemelere dokunmaz.';
+  }
+  function nameOf(id){for(var x=0;x<ideas.length;x++) if(ideas[x].id===id) return ideas[x].n; return null}
+
+  /* sepetler */
+  function when(ts){if(!ts) return ''; try{return new Date(ts).toLocaleString('tr-TR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+  function drawBaskets(){
+    $('n-sepet').textContent=baskets.filter(function(b){return !b.done}).length;
+    if(!baskets.length){$('baskets').innerHTML='<p class="empty">Henüz gönderilmiş sepet yok. Siteden bir sepet gönderildiğinde burada görünür.</p>';return}
+    $('baskets').innerHTML=baskets.map(function(b){
+      var names=(b.ids||[]).map(function(id,x){return nameOf(id)||(b.names&&b.names[x])||('Fikir '+id)});
+      return '<article class="sp'+(b.done?' done':'')+'"><div class="top"><span class="who">'+esc([unitName(b.birim),b.ad].filter(Boolean).join(' · ')||'Adını yazmamış')+'</span><time>'+esc(when(b.ts))+'</time></div>'+
+        (b.not?'<p class="nt">'+esc(b.not)+'</p>':'')+
+        '<div class="steps">'+names.map(function(n){return '<span class="tag ex" style="border-style:solid;color:var(--fg)">'+esc(n)+'</span>'}).join('')+'</div>'+
+        '<div class="acts"><button type="button" class="btn sm'+(b.done?' on':'')+'" data-done="'+esc(b._id)+'">'+(b.done?'Görüşüldü · geri al':'Görüşüldü olarak işaretle')+'</button>'+
+        '<a class="btn sm" href="index.html#s-'+(b.ids||[]).join('-')+'" target="_blank" rel="noopener">Sepeti sitede aç</a>'+
+        '<button type="button" class="btn sm danger" data-del="'+esc(b._id)+'">'+(armed===b._id?'Emin misiniz? Sil':'Sil')+'</button></div></article>';
+    }).join('');
+  }
+  function drawSummary(){
+    var ic={}, uc={};
+    baskets.forEach(function(b){(b.ids||[]).forEach(function(id){ic[id]=(ic[id]||0)+1; ideas.forEach(function(i){if(i.id===id) uc[i.b]=(uc[i.b]||0)+1})})});
+    function bars(el,rows){
+      if(!rows.length){$(el).innerHTML='<p class="note">Sepet geldikçe burada görünür.</p>';return}
+      rows.sort(function(a,b){return b[1]-a[1]}); var mx=rows[0][1];
+      $(el).innerHTML=rows.slice(0,15).map(function(r){return '<div class="brow" style="cursor:default"><span>'+esc(r[0])+'</span><span class="tr"><i style="width:'+(r[1]/mx*100)+'%"></i></span><b>'+r[1]+'</b></div>'}).join('');
+    }
+    bars('o-ideas',Object.keys(ic).map(function(id){return [nameOf(+id)||('Fikir '+id),ic[id]]}));
+    bars('o-units',Object.keys(uc).map(function(b){return [B[b]||b,uc[b]]}));
+    /* sender unit -> chosen ideas */
+    var bu={};
+    baskets.forEach(function(b){var u=b.birim||''; bu[u]=bu[u]||{}; (b.ids||[]).forEach(function(id){bu[u][id]=(bu[u][id]||0)+1})});
+    var keys=Object.keys(bu).sort(function(x,y){return (x?0:1)-(y?0:1)||unitName(x).localeCompare(unitName(y),'tr')});
+    $('o-byunit').innerHTML=keys.length?keys.map(function(u){
+      var ids=Object.keys(bu[u]).sort(function(x,y){return bu[u][y]-bu[u][x]});
+      return '<article class="sp"><div class="top"><span class="who">'+esc(u?unitName(u):'Birimi belirtilmemiş')+'</span><time>'+ids.length+' fikir</time></div><div class="steps">'+
+        ids.map(function(id){return '<span class="tag ex" style="border-style:solid;color:var(--fg)">'+esc((nameOf(+id)||('Fikir '+id))+(bu[u][id]>1?' · '+bu[u][id]:''))+'</span>'}).join('')+'</div></article>';
+    }).join(''):'<p class="empty">Sepet geldikçe burada görünür.</p>';
+  }
+  function drawInterest(noRule){
+    function bars(el,k){
+      var rows=Object.keys(interest).filter(function(id){return /^\d+$/.test(id)}).map(function(id){return [nameOf(+id)||('Fikir '+id),interest[id][k]||0]}).filter(function(r){return r[1]});
+      if(!rows.length){$(el).innerHTML='<p class="note">'+(noRule?'Sayaç için Firebase kurallarının güncellenmesi gerekiyor.':'Ziyaretçiler fikirleri açtıkça burada görünür.')+'</p>';return}
+      rows.sort(function(a,b){return b[1]-a[1]}); var mx=rows[0][1];
+      $(el).innerHTML=rows.slice(0,15).map(function(r){return '<div class="brow" style="cursor:default"><span>'+esc(r[0])+'</span><span class="tr"><i style="width:'+(r[1]/mx*100)+'%"></i></span><b>'+r[1]+'</b></div>'}).join('');
+    }
+    bars('o-ac','ac'); bars('o-is','is');
+    function rowsHtml(rows){var mx=Math.max.apply(null,rows.map(function(r){return r[1]}).concat([1])); return rows.map(function(r){return '<div class="brow" style="cursor:default"><span>'+esc(r[0])+'</span><span class="tr"><i style="width:'+(r[1]/mx*100)+'%"></i></span><b>'+r[1]+'</b></div>'}).join('')}
+    var days=[], tot=0, d0=new Date(); for(var x=29;x>=0;x--){var d=new Date(d0.getFullYear(),d0.getMonth(),d0.getDate()-x), k='gun-'+d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2), v=(interest[k]||{}).ac||0; tot+=v; days.push([d.toLocaleDateString('tr-TR',{day:'numeric',month:'short',weekday:'short'}),v])}
+    $('o-vt').textContent='Son 30 günde toplam '+tot+' ziyaret · bugün '+days[29][1];
+    var shown=days.filter(function(r){return r[1]}).reverse();
+    $('o-visit').innerHTML=shown.length?rowsHtml(shown):'<p class="note">Ziyaret geldikçe burada görünür.</p>';
+    var miss=Object.keys(interest).filter(function(k){return k.indexOf('q-')===0}).map(function(k){return ['“'+k.slice(2)+'”',(interest[k]||{}).ac||0]}).sort(function(a,b){return b[1]-a[1]}).slice(0,25);
+    $('o-miss').innerHTML=miss.length?rowsHtml(miss):'<p class="note">Sonuç vermeyen arama oldukça burada görünür.</p>';
+    var er=Object.keys(interest).filter(function(k){return k.indexOf('e-')===0}).map(function(k){return [k.slice(2),(interest[k]||{}).ac||0]}).sort(function(a,b){return b[1]-a[1]}).slice(0,20);
+    $('o-err').innerHTML=er.length?rowsHtml(er):'<p class="note">Kayıtlı hata yok.</p>';
+  }
+  function drawLinks(){
+    var base=location.href.split('#')[0].split('?')[0].replace(/admin\.html$/,'');
+    $('links').innerHTML=Object.keys(B).filter(function(c){return c!=='ok'}).map(function(c){
+      var n=ideas.filter(function(i){return inB(i,c)}).length, lead=ideas.filter(function(i){return i.b===c}).length, u=base+'?birim='+c;
+      return '<article class="sp"><div class="top"><span class="who">'+esc(B[c])+'</span><time>'+lead+' fikri yürütüyor · '+(n-lead)+' fikirde ortak</time></div>'+
+        '<div class="meta"><input class="lk" readonly value="'+esc(u)+'" aria-label="'+esc(B[c])+' bağlantısı" style="flex:1 1 260px;min-width:0;background:transparent;color:var(--fg);border:1px solid var(--line2);border-radius:10px;padding:8px 12px;font:inherit;font-size:14px"><button type="button" class="btn sm" data-copy="'+esc(u)+'">Kopyala</button><a class="btn sm" href="'+esc(u)+'" target="_blank" rel="noopener">Aç</a></div></article>';
+    }).join('');
+  }
+
+  /* fikirler */
+  function drawIdeas(){
+    $('n-fikir').textContent=ideas.length; $('seed').hidden=inDb; drawSync();
+    var q=$('fq').value.trim().toLocaleLowerCase('tr');
+    var r=ideas.filter(function(i){return !q||(i.n+' '+(i.t||'')+' '+(i.o||'')).toLocaleLowerCase('tr').indexOf(q)>-1}).sort(function(a,b){return a.n.localeCompare(b.n,'tr')});
+    $('rows').innerHTML=r.map(function(i){return '<tr><td class="n">'+esc(i.n)+(i.t?'<br><small style="font-weight:500;color:var(--muted)">'+esc(i.t)+'</small>':'')+'</td><td>'+esc(F[i.f]||'')+'</td><td>'+esc(E[i.e]||'')+'</td><td>'+(i.s?'<span class="pill s">'+esc(i.s+(i.sn?' · '+i.sn:''))+'</span>':'')+'</td><td style="text-align:right"><button type="button" class="btn sm" data-edit="'+i.id+'">Düzenle</button></td></tr>'}).join('')||'<tr><td colspan="5" class="note">Aramaya uyan fikir yok.</td></tr>';
+  }
+  function opts(id,dict){$(id).innerHTML=Object.keys(dict).map(function(k){return '<option value="'+k+'">'+esc(dict[k])+'</option>'}).join('')}
+  opts('e-f',F);opts('e-b',B);opts('e-e',E);opts('e-d',D);
+  $('e-s').innerHTML='<option value="">Yok</option>'+ST.map(function(s){return '<option>'+esc(s)+'</option>'}).join('');
+  $('e-k').innerHTML=Object.keys(K).map(function(c){return '<label><input type="checkbox" value="'+c+'" id="e-k-'+c+'">'+esc(K[c])+'</label>'}).join('');
+  function openEdit(i){
+    editing=i; $('eerr').textContent=''; $('e-h').textContent=i?'Fikri düzenle':'Yeni fikir'; $('e-del').hidden=!i; $('e-del').textContent='Fikri sil';
+    i=i||{f:3,b:'usi',e:2,d:2,k:''};
+    $('e-n').value=i.n||''; $('e-t').value=i.t||''; $('e-o').value=i.o||''; $('e-l').value=i.l||''; $('e-f').value=i.f; $('e-b').value=i.b; $('e-e').value=i.e; $('e-d').value=i.d;
+    Object.keys(K).forEach(function(c){$('e-k-'+c).checked=(i.k||'').indexOf(c)>-1});
+    $('e-s').value=i.s||''; $('e-sn').value=i.sn||''; $('e-g').value=i.g||''; $('e-fs').value=i.fs||''; $('e-kp').value=i.kp||''; $('e-v').value=i.v||'';
+    $('e-u').value=i.u?(/^https?:/.test(i.u)?i.u:'https://claude.ai/artifact/'+i.u):'';
+    $('e-r').value=(i.r||[]).map(function(r){return r[0]+' | '+r[1]}).join('\n');
+    $('edit').showModal();
+  }
+  function ensureDb(){return inDb?Promise.resolve():Store.seedIdeas(ideas).then(function(){inDb=true})}
+  $('eform').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var i=editing?JSON.parse(JSON.stringify(editing)):{id:ideas.reduce(function(m,x){return Math.max(m,x.id)},0)+1};
+    delete i._id; delete i.hay;
+    i.n=$('e-n').value.trim(); i.t=$('e-t').value.trim(); i.o=$('e-o').value.trim(); i.f=+$('e-f').value; i.b=$('e-b').value; i.e=+$('e-e').value; i.d=+$('e-d').value;
+    i.k=Object.keys(K).filter(function(c){return $('e-k-'+c).checked}).join('');
+    [['l','e-l'],['s','e-s'],['sn','e-sn'],['g','e-g'],['fs','e-fs'],['kp','e-kp'],['v','e-v'],['u','e-u']].forEach(function(p){var v=$(p[1]).value.trim(); if(v) i[p[0]]=v; else delete i[p[0]]});
+    if(!i.s) delete i.sn;
+    if(i.u&&!/^https?:\/\//.test(i.u)){$('eerr').textContent='Sunum bağlantısı https:// ile başlamalı.';return}
+    var r=$('e-r').value.split('\n').map(function(l){var p=l.split('|');return [p[0].trim(),(p.slice(1).join('|')||'').trim()]}).filter(function(x){return x[0]});
+    if(r.length) i.r=r; else delete i.r;
+    if(!i.n||!i.o){$('eerr').textContent='Ad ve tek cümlelik açıklama gerekli.';return}
+    ensureDb().then(function(){return Store.saveIdea(i)}).then(function(){$('edit').close();loadAll()}).catch(function(e){$('eerr').textContent='Kaydedilemedi'+(e&&e.code?' ('+e.code+')':'')+'.'});
+  });
+  $('e-del').addEventListener('click',function(){
+    if(this.textContent!=='Emin misiniz? Sil'){this.textContent='Emin misiniz? Sil';return}
+    var id=editing.id;
+    ensureDb().then(function(){return Store.deleteIdea(id)}).then(function(){$('edit').close();loadAll()}).catch(function(e){$('eerr').textContent='Silinemedi'+(e&&e.code?' ('+e.code+')':'')+'.'});
+  });
+  $('new').addEventListener('click',function(){openEdit(null)});
+  $('fq').addEventListener('input',drawIdeas);
+  $('sync-go').addEventListener('click',function(){clearErr();var d=diff();Store.addIdeas(d.add.concat(d.fix)).then(loadAll).catch(fail)});
+  $('seed-go').addEventListener('click',function(){clearErr();Store.seedIdeas(SEED.ideas).then(loadAll).catch(fail)});
+
+  document.addEventListener('click',function(ev){
+    var t=ev.target.closest('[data-inv],[data-tab],[data-done],[data-del],[data-edit],[data-close],[data-copy],[data-sdone],[data-sconv],[data-sdel]'); if(!t) return;
+    if(t.dataset.sdone){var s=sugg.filter(function(x){return x._id===t.dataset.sdone})[0]; if(!s) return; clearErr();
+      Store.updateSuggestion(s._id,{done:!s.done}).then(function(){s.done=!s.done;drawSugg()}).catch(fail);return}
+    if(t.dataset.sdel){var sid=t.dataset.sdel; if(sArmed!==sid){sArmed=sid;drawSugg();return} sArmed=null; clearErr();
+      Store.deleteSuggestion(sid).then(function(){sugg=sugg.filter(function(x){return x._id!==sid});drawSugg()}).catch(fail);return}
+    if(t.dataset.sconv){var c=sugg.filter(function(x){return x._id===t.dataset.sconv})[0]; if(!c) return;
+      openEdit(null); $('e-n').value=c.baslik; $('e-o').value=c.aciklama.length>220?c.aciklama.slice(0,217)+'…':c.aciklama; $('e-l').value=c.aciklama.slice(0,700); if(B[c.birim]) $('e-b').value=c.birim; return}
+    if(t.dataset.copy){var bt=t, ok=function(){bt.textContent='Kopyalandı';setTimeout(function(){bt.textContent='Kopyala'},1500)}; try{navigator.clipboard.writeText(bt.dataset.copy).then(ok,function(){bt.previousElementSibling.select()})}catch(e){bt.previousElementSibling.select()} return}
+    if(t.dataset.inv){var ie=t.dataset.inv; if(t.textContent!=='Emin misiniz? Sil'){t.textContent='Emin misiniz? Sil';return} Store.removeInvite(ie).then(loadInv).catch(fail);return}
+    if(t.dataset.close!==undefined){t.closest('dialog').close();return}
+    if(t.dataset.tab){['sepet','oneri','ozet','fikir','link','davet','icerik'].forEach(function(k){$('t-'+k).hidden=k!==t.dataset.tab});document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b===t)});return}
+    if(t.dataset.edit){var id=+t.dataset.edit;openEdit(ideas.filter(function(i){return i.id===id})[0]);return}
+    if(t.dataset.done){var b=baskets.filter(function(x){return x._id===t.dataset.done})[0]; if(!b) return; clearErr();
+      Store.updateBasket(b._id,{done:!b.done}).then(function(){b.done=!b.done;drawBaskets()}).catch(fail);return}
+    if(t.dataset.del){var bid=t.dataset.del; if(armed!==bid){armed=bid;drawBaskets();return} armed=null; clearErr();
+      Store.deleteBasket(bid).then(function(){baskets=baskets.filter(function(x){return x._id!==bid});drawBaskets();drawSummary()}).catch(fail);return}
+  });
+  $('edit').addEventListener('click',function(ev){if(ev.target===this) this.close()});
+})();
+</script>
+</body>
+</html>
