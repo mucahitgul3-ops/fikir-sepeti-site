@@ -15,8 +15,8 @@
 <meta property="og:site_name" content="Fikir Sepeti">
 <meta property="og:title" content="Fikir Sepeti · Sakarya Teknokent">
 <meta property="og:description" content="Üniversite, sanayi ve öğrenciler için 105 program ve etkinlik fikri. Gezin, ilginizi çekenleri seçin, paylaşın.">
-<meta property="og:url" content="https://fikir-sepeti-site.pages.dev/">
-<meta property="og:image" content="https://fikir-sepeti-site.pages.dev/og.png">
+<meta property="og:url" content="https://mucahitgul3-ops.github.io/fikir-sepeti-site/">
+<meta property="og:image" content="https://mucahitgul3-ops.github.io/fikir-sepeti-site/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -27,9 +27,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fikir Sepeti">
-<link rel="alternate" hreflang="tr" href="https://fikir-sepeti-site.pages.dev/">
-<link rel="alternate" hreflang="en" href="https://fikir-sepeti-site.pages.dev/en.html">
-<link rel="alternate" hreflang="x-default" href="https://fikir-sepeti-site.pages.dev/">
+<link rel="alternate" hreflang="tr" href="https://mucahitgul3-ops.github.io/fikir-sepeti-site/">
+<link rel="alternate" hreflang="en" href="https://mucahitgul3-ops.github.io/fikir-sepeti-site/en.html">
+<link rel="alternate" hreflang="x-default" href="https://mucahitgul3-ops.github.io/fikir-sepeti-site/">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -80,6 +80,17 @@
   <p id="shared-t"></p>
   <div class="acts"><button class="btn pri sm" id="shared-add" type="button">Sepetime al</button><button class="btn sm" id="shared-x" type="button">Kapat</button></div>
 </div>
+
+<section id="harita" data-view="genel">
+  <div class="head">
+    <p class="eyebrow">Bir bakışta</p>
+    <h2>Bu dosya kimleri bir araya getiriyor?</h2>
+  </div>
+  <div class="mapgrid">
+    <div class="mapw" id="mapw"><svg id="map" viewBox="0 0 800 520" role="img" aria-labelledby="map-t"><title id="map-t">Fikirlerin bir araya getirdiği kesimler</title></svg></div>
+    <div class="mapinfo" id="mapinfo" aria-live="polite"></div>
+  </div>
+</section>
 
 <section id="one" data-view="genel">
   <div class="head">
@@ -294,6 +305,7 @@
 <script src="store.js"></script>
 <script src="gate.js"></script>
 <script>
+window.MAP_LOGO='teknokent-logo.svg';
 window.addEventListener('error',function(ev){try{var m=String(ev.message||'hata').replace(/[\/\n]/g,' ').slice(0,70)+' @'+String(ev.filename||'').split('/').pop().slice(0,20)+':'+(ev.lineno||0), k='fs-err-'+m;
   if(sessionStorage.getItem(k)||!window.Store||!Store.bump) return; sessionStorage.setItem(k,'1'); Store.bump('e-'+m,'ac')}catch(e){}});
 function boot(I){
@@ -416,7 +428,7 @@ function boot(I){
     [].forEach.call(document.querySelectorAll('.wrap [data-view]'),function(el){el.classList.toggle('off',el.dataset.view!==v)});
     drawSide();
     if(!keep&&!/^#s-/.test(location.hash||'')&&location.hash!=='#'+(v==='raf'?rafHash():v)) try{history.pushState(null,'','#'+(v==='raf'?rafHash():v))}catch(e){}
-    setTitle(vTitle());
+    setTitle(vTitle()); if(v==='genel'&&typeof mapGo==='function') setTimeout(mapGo,0);
     if(!keep){var hd=document.querySelector('.wrap [data-view="'+v+'"] h1,.wrap [data-view="'+v+'"] h2'); if(hd){hd.setAttribute('tabindex','-1'); try{hd.focus({preventScroll:true})}catch(e){}}}
     try{window.scrollTo({top:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}
   }
@@ -444,7 +456,103 @@ function boot(I){
     if(m==='light') r.setAttribute('data-fs','light'); else r.removeAttribute('data-fs');
     if(b){b.textContent=m==='light'?'☾':'☀'; b.setAttribute('aria-label',THL[m==='light'?1:0]); b.title=THL[m==='light'?1:0]}
     try{localStorage.setItem('fs-theme',m)}catch(e){}}
+  /* fikir haritası: kesimler ve onları buluşturan fikirler */
+  var MAPK=['a','s','f','g','c','o'], MAPA={a:-148,s:-32,f:18,g:72,c:122,o:168}, mapSel='';
+  function mapCount(c){return I.filter(function(i){return i.k.indexOf(c)>-1}).length}
+  function mapPair(a,b){return I.filter(function(i){return i.k.indexOf(a)>-1&&i.k.indexOf(b)>-1}).length}
+  function mapLabel(t,x,y){var w=t.length>12&&t.indexOf(' ')>0?[t.slice(0,t.indexOf(' ')),t.slice(t.indexOf(' ')+1)]:[t];
+    return w.length>1?'<text data-dy="-12">'+esc(w[0])+'</text><text data-dy="8">'+esc(w[1])+'</text>':'<text data-dy="-2">'+esc(t)+'</text>'}
+  var MP={}, MH={}, MD=null, MCX=400, MCY=260, mapRun=false, mapVis=false, mapPtr=null, mapDots=[], mapCv=null, mapCol='46,168,211',
+      mapCalm=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function drawMap(){
+    var sv=$('map'); if(!sv) return; var h='', ns='', maxw=1, pairs=[];
+    MAPK.forEach(function(c,x){var r=Math.PI*MAPA[c]/180; MH[c]={x:MCX+300*Math.cos(r), y:MCY+185*Math.sin(r), n:mapCount(c), ph:x*1.7}; if(!MP[c]) MP[c]={dx:0,dy:0}});
+    MAPK.forEach(function(a,x){MAPK.slice(x+1).forEach(function(b){var w=mapPair(a,b); if(w){pairs.push([a,b,w]); if(w>maxw) maxw=w}})});
+    MAPK.forEach(function(c){h+='<line class="sp" data-c="'+c+'" x1="'+MCX+'" y1="'+MCY+'"/>'});
+    pairs.forEach(function(q){h+='<path class="ln" data-a="'+q[0]+'" data-b="'+q[1]+'" stroke-width="'+(1.5+q[2]/maxw*12).toFixed(1)+'"/>'});
+    pairs.forEach(function(q){for(var f=0,nf=1+Math.round(q[2]/maxw*2);f<nf;f++) h+='<circle class="fl" r="'+(2.2+q[2]/maxw*1.6).toFixed(1)+'" data-a="'+q[0]+'" data-b="'+q[1]+'" data-o="'+(f/nf+Math.random()*.2).toFixed(3)+'" data-s="'+(0.6+Math.random()*.5).toFixed(2)+'"/>'});
+    var CR=window.MAP_LOGO?84:64, OR=CR+20, pv=CR+';'+(CR+56), pulse=mapCalm?'':'<circle class="pulse" r="'+CR+'"><animate attributeName="r" values="'+pv+'" dur="3.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0" dur="3.6s" repeatCount="indefinite"/></circle><circle class="pulse" r="'+CR+'"><animate attributeName="r" values="'+pv+'" dur="3.6s" begin="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0" dur="3.6s" begin="1.8s" repeatCount="indefinite"/></circle>';
+    h+='<g class="ctr" transform="translate('+MCX+' '+MCY+')">'+pulse+'<g class="orb">'+(mapCalm?'':'<animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="48s" repeatCount="indefinite"/>')+'<circle class="ring" r="'+OR+'"/><circle class="sat" cx="'+OR+'" cy="0" r="4"/><circle class="sat" cx="'+(-OR*.707).toFixed(1)+'" cy="'+(OR*.707).toFixed(1)+'" r="3"/><circle class="sat" cx="'+(-OR*.357).toFixed(1)+'" cy="'+(-OR*.934).toFixed(1)+'" r="2.5"/></g>'+
+      (window.MAP_LOGO?'<circle class="core lg" r="84"/><circle class="inner lg" r="77"/><image href="'+window.MAP_LOGO+'" x="-65" y="-55" width="130" height="109" preserveAspectRatio="xMidYMid meet"/>'
+        :'<circle class="core" r="64"/><ellipse class="hl" cx="0" cy="-26" rx="44" ry="24"/><circle class="inner" r="55"/><text class="t1" y="-9">SAKARYA</text><text class="t2" y="15">Teknokent</text>')+'</g>';
+    MAPK.forEach(function(c){var r=Math.round(26+Math.sqrt(MH[c].n)*4.2), two=K[c].length>12&&K[c].indexOf(' ')>0;
+      ns+='<g class="nd" data-mk="'+c+'" tabindex="0" role="button" aria-label="'+esc(K[c])+'"><circle r="'+r+'"/>'+mapLabel(K[c])+'<text class="n" data-dy="'+(two?30:19)+'">'+MH[c].n+'</text></g>'});
+    sv.innerHTML=sv.querySelector('title').outerHTML+h+ns;
+    mapPos(0); mapInfo(); mapSetup();
+  }
+  function mapXY(c,tm){var H=MH[c], o=MP[c], fx=0, fy=0; if(!mapCalm&&!(MD&&MD.c===c)){fx=Math.sin(tm*0.0006+H.ph)*7; fy=Math.cos(tm*0.00047+H.ph*1.3)*6}
+    return {x:H.x+o.dx+fx, y:H.y+o.dy+fy}}
+  function mapPos(tm){
+    var sv=$('map'); if(!sv) return; var Q={};
+    MAPK.forEach(function(c){Q[c]=mapXY(c,tm)});
+    [].forEach.call(sv.querySelectorAll('.sp'),function(l){var q=Q[l.dataset.c]; l.setAttribute('x2',q.x.toFixed(1)); l.setAttribute('y2',q.y.toFixed(1))});
+    [].forEach.call(sv.querySelectorAll('.ln'),function(l){var A=Q[l.dataset.a], Bq=Q[l.dataset.b], mx=(A.x+Bq.x)/2, my=(A.y+Bq.y)/2, qx=mx+(MCX-mx)*.35, qy=my+(MCY-my)*.35;
+      l.setAttribute('d','M'+A.x.toFixed(1)+' '+A.y.toFixed(1)+' Q'+qx.toFixed(1)+' '+qy.toFixed(1)+' '+Bq.x.toFixed(1)+' '+Bq.y.toFixed(1)); Q[l.dataset.a+l.dataset.b]=[qx,qy]});
+    [].forEach.call(sv.querySelectorAll('.fl'),function(d){var A=Q[d.dataset.a], Bq=Q[d.dataset.b], C=Q[d.dataset.a+d.dataset.b], u=((tm||0)*0.00009*(+d.dataset.s)+(+d.dataset.o))%1, v=1-u;
+      d.setAttribute('cx',(v*v*A.x+2*v*u*C[0]+u*u*Bq.x).toFixed(1)); d.setAttribute('cy',(v*v*A.y+2*v*u*C[1]+u*u*Bq.y).toFixed(1)); d.setAttribute('opacity',(Math.sin(u*Math.PI)*.9).toFixed(2))});
+    [].forEach.call(sv.querySelectorAll('.nd'),function(g){var q=Q[g.dataset.mk], ci=g.querySelector('circle'); ci.setAttribute('cx',q.x.toFixed(1)); ci.setAttribute('cy',q.y.toFixed(1));
+      [].forEach.call(g.querySelectorAll('text'),function(tx){tx.setAttribute('x',q.x.toFixed(1)); tx.setAttribute('y',(q.y+(+tx.dataset.dy||0)).toFixed(1))})});
+  }
+  /* arka plandaki hareketli ağ: imleç yaklaştıkça çizgiler ona bağlanır */
+  function mapSetup(){
+    var w=$('mapw'); if(!w||mapCv) return;
+    mapCv=document.createElement('canvas'); mapCv.className='mapcv'; mapCv.setAttribute('aria-hidden','true'); w.insertBefore(mapCv,w.firstChild);
+    for(var i=0;i<46;i++) mapDots.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00035,vy:(Math.random()-.5)*.00035});
+    var pt=function(ev){var r=w.getBoundingClientRect(); return {x:ev.clientX-r.left, y:ev.clientY-r.top, w:r.width, h:r.height}};
+    w.addEventListener('pointermove',function(ev){mapPtr=pt(ev); if(MD){var r=w.getBoundingClientRect(), k=800/r.width; MD.moved=MD.moved||Math.abs(ev.clientX-MD.sx)+Math.abs(ev.clientY-MD.sy)>5;
+      MP[MD.c].dx=MD.ox+(ev.clientX-MD.sx)*k; MP[MD.c].dy=MD.oy+(ev.clientY-MD.sy)*k; if(mapCalm) mapPos(0)}});
+    w.addEventListener('pointerleave',function(){mapPtr=null});
+    w.addEventListener('pointerdown',function(ev){var g=ev.target.closest('.nd');
+      if(!g){var q=pt(ev); for(var k=0;k<4;k++) mapDots.push({x:q.x/q.w+(Math.random()-.5)*.03,y:q.y/q.h+(Math.random()-.5)*.04,vx:(Math.random()-.5)*.0006,vy:(Math.random()-.5)*.0006}); if(mapDots.length>150) mapDots.splice(46,mapDots.length-150); if(mapCalm) mapGo(); return} var c=g.dataset.mk; MD={c:c,sx:ev.clientX,sy:ev.clientY,ox:MP[c].dx,oy:MP[c].dy,moved:false}; try{g.setPointerCapture(ev.pointerId)}catch(e){} w.classList.add('drag')});
+    var up=function(){if(!MD) return; var d=MD; MD=null; w.classList.remove('drag'); if(d.moved){w.dataset.nc='1'; setTimeout(function(){delete w.dataset.nc},0)}
+      var o=MP[d.c], x0=o.dx, y0=o.dy, t0=performance.now(); (function back(n){var k=Math.min(1,(n-t0)/650), e=1-Math.pow(1-k,3)*Math.cos(k*4); o.dx=x0*(1-e); o.dy=y0*(1-e); if(mapCalm) mapPos(0); if(k<1) requestAnimationFrame(back); else {o.dx=0;o.dy=0}})(t0)};
+    w.addEventListener('pointerup',up); w.addEventListener('pointercancel',up);
+    var col=function(){var s=getComputedStyle(document.documentElement).getPropertyValue('--sky').trim(), m=/^#([0-9a-f]{6})$/i.exec(s); if(m){var v=parseInt(m[1],16); mapCol=((v>>16)&255)+','+((v>>8)&255)+','+(v&255)}};
+    col(); if($('theme')) $('theme').addEventListener('click',function(){setTimeout(col,30)});
+    if('IntersectionObserver' in window) new IntersectionObserver(function(es){mapVis=es[0].isIntersecting; mapGo()}).observe(w); else {mapVis=true; mapGo()}
+    document.addEventListener('visibilitychange',mapGo);
+  }
+  function mapGo(){if(mapRun||!mapVis||document.hidden) return; mapRun=true; requestAnimationFrame(mapTick)}
+  function mapTick(tm){
+    if(!mapVis||document.hidden||view!=='genel'){mapRun=false; return}
+    var w=$('mapw'), cv=mapCv, dpr=Math.min(window.devicePixelRatio||1,2), W=w.clientWidth, Hh=w.clientHeight;
+    if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(Hh*dpr)){cv.width=Math.round(W*dpr); cv.height=Math.round(Hh*dpr)}
+    var x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,Hh);
+    var L=Math.min(130,W*.2), pts=mapDots.map(function(d){if(!mapCalm){d.x+=d.vx*16; d.y+=d.vy*16; if(d.x<0||d.x>1) d.vx*=-1; if(d.y<0||d.y>1) d.vy*=-1}
+      var px=d.x*W, py=d.y*Hh; if(mapPtr&&!mapCalm){var ddx=px-mapPtr.x, ddy=py-mapPtr.y, dd=Math.sqrt(ddx*ddx+ddy*ddy); if(dd<110&&dd>0){px+=ddx/dd*(110-dd)*.25; py+=ddy/dd*(110-dd)*.25}} return [px,py]});
+    for(var i=0;i<pts.length;i++){for(var j=i+1;j<pts.length;j++){var dx=pts[i][0]-pts[j][0], dy=pts[i][1]-pts[j][1], d=Math.sqrt(dx*dx+dy*dy);
+      if(d<L){x.strokeStyle='rgba('+mapCol+','+(0.16*(1-d/L)).toFixed(3)+')'; x.lineWidth=1; x.beginPath(); x.moveTo(pts[i][0],pts[i][1]); x.lineTo(pts[j][0],pts[j][1]); x.stroke()}}
+      if(mapPtr){var ex=pts[i][0]-mapPtr.x, ey=pts[i][1]-mapPtr.y, e=Math.sqrt(ex*ex+ey*ey); if(e<170){x.strokeStyle='rgba('+mapCol+','+(0.35*(1-e/170)).toFixed(3)+')'; x.beginPath(); x.moveTo(pts[i][0],pts[i][1]); x.lineTo(mapPtr.x,mapPtr.y); x.stroke()}}
+      x.fillStyle='rgba('+mapCol+',.45)'; x.beginPath(); x.arc(pts[i][0],pts[i][1],1.6,0,6.3); x.fill()}
+    mapPos(tm);
+    requestAnimationFrame(mapTick);
+  }
+  function mapInfo(){
+    var M=['','{n} fikir, en az iki kesimi aynı masaya getiriyor.','Çizgiler kalınlaştıkça o iki kesimi buluşturan fikir sayısı artar. Bir kesime dokunun.','Üniversiteyi sanayiyle buluşturur.','Öğrenciyi firmaya ve girişime taşır.','Sonucu TÜBİTAK endeksine ve Ar-Ge portalına yazar.','fikir bu kesime dokunuyor.','En çok birlikte çalıştığı kesimler:','Bu fikirlere git →','Haritaya dön'];
+    var w=$('mapw'), box=$('mapinfo'), multi=I.filter(function(i){return new Set(i.k.split('').filter(function(c){return c!=='e'})).size>1}).length;
+    [].forEach.call(document.querySelectorAll('#map .nd'),function(g){var on=g.dataset.mk===mapSel; g.classList.toggle('on',on); g.setAttribute('aria-pressed',String(on))});
+    [].forEach.call(document.querySelectorAll('#map .nd'),function(g){g.classList.remove('nb')});
+    [].forEach.call(document.querySelectorAll('#map .ln'),function(l){var on=!!mapSel&&(l.dataset.a===mapSel||l.dataset.b===mapSel); l.classList.toggle('on',on); if(on){var o=l.dataset.a===mapSel?l.dataset.b:l.dataset.a, g=document.querySelector('#map .nd[data-mk="'+o+'"]'); if(g) g.classList.add('nb')}});
+    w.classList.toggle('sel',!!mapSel);
+    if(!mapSel){box.innerHTML='<h3>'+M[1].replace('{n}',multi)+'</h3><p>'+M[2]+'</p><ul class="msgs"><li>'+M[3]+'</li><li>'+M[4]+'</li><li>'+M[5]+'</li></ul>';return}
+    var top=MAPK.filter(function(c){return c!==mapSel}).map(function(c){return [c,mapPair(mapSel,c)]}).filter(function(x){return x[1]}).sort(function(a,b){return b[1]-a[1]}).slice(0,3);
+    box.innerHTML='<h3>'+esc(K[mapSel])+'</h3><p><b style="color:var(--fg)">'+mapCount(mapSel)+'</b> '+M[6]+'</p>'+(top.length?'<p>'+M[7]+' '+top.map(function(x){return esc(K[x[0]])+' ('+x[1]+')'}).join(', ')+'</p>':'')+'<div class="acts"><button class="btn pri sm" type="button" data-mgo="'+mapSel+'">'+M[8]+'</button><button class="btn sm" type="button" data-mx="1">'+M[9]+'</button></div>';
+  }
+  /* simgeler (çizgi, currentColor) */
+  function svgI(d){return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'}
+  var ICO={start:svgI('<path d="M6 21V4"/><path d="M6 4h11l-2.5 4L17 12H6"/>'),goal:svgI('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'),kpi:svgI('<path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16V5"/>')};
+  var THI={1:svgI('<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>'),
+    2:svgI('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+    3:svgI('<path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/>'),
+    4:svgI('<path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5V16c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.5"/>'),
+    5:svgI('<path d="M12 2.5c3 2 4.8 5.8 4.8 9.5L15 16H9l-1.8-4c0-3.7 1.8-7.5 4.8-9.5z"/><circle cx="12" cy="10" r="1.8"/><path d="M9 16l-1.5 4 2.5-1M15 16l1.5 4-2.5-1"/>'),
+    6:svgI('<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>'),
+    7:svgI('<circle cx="9" cy="8" r="3.3"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14c3 0 5 1.8 5 5"/>'),
+    8:svgI('<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.5h8M8 12.5h5"/>'),
+    9:svgI('<path d="M5 19c0-8 5.5-14 15-14 0 9.5-6 15-14 15"/><path d="M5 19l8.5-8.5"/>'),
+    10:svgI('<path d="M3 20.5V10l5 3v-3l5 3v-3l5 3V4h3v16.5z"/><path d="M7 17h2M12 17h2"/>')};
   function drawHome(){
+    drawMap();
     drawChg();
     var np=I.filter(function(i){return i.pg}).length, nt=I.filter(function(i){return i.tp}).length;
     var T=[['raf',I.length,'fikir','Tüm fikirler','Fikirlerin tamamı tek rafta: arayın, süzün, ilginizi çekenleri sepetinize ekleyin.'],
@@ -456,7 +564,7 @@ function boot(I){
       ['veri',Object.keys(F).filter(function(f){return I.some(function(i){return String(i.f)===f})}).length,'tema','Sayılarla dosya','Fikirlerin temaya, kitleye, birime ve efora göre dağılımı.']];
     $('tiles').innerHTML=T.filter(function(t){return t[0]!=='programlar'||np}).map(function(t){return '<a class="tile" href="#'+t[0]+'" data-go="'+t[0]+'"><span class="k">'+t[1]+'<small>'+esc(t[2])+'</small></span><h3>'+esc(t[3])+'</h3><p>'+esc(t[4])+'</p><span class="gt">Aç →</span></a>'}).join('');
     var rank=function(a,b){return (a.tp||99)-(b.tp||99)||b.im-a.im||QO[a.pq]-QO[b.pq]||a.n.localeCompare(b.n,'tr')};
-    $('tgrid').innerHTML=Object.keys(F).map(function(c){var L=I.filter(function(i){return String(i.f)===c}).sort(rank); return L.length?'<button type="button" class="tt" data-th="'+c+'"><span class="n">'+esc(F[c])+'<b>'+L.length+'</b></span><small>'+esc(L.slice(0,3).map(function(i){return i.n}).join(' · '))+'</small></button>':''}).join('');
+    $('tgrid').innerHTML=Object.keys(F).map(function(c){var L=I.filter(function(i){return String(i.f)===c}).sort(rank); return L.length?'<button type="button" class="tt" data-th="'+c+'"><span class="ti" aria-hidden="true">'+(THI[c]||'')+'</span><span class="n">'+esc(F[c])+'<b>'+L.length+'</b></span><small>'+esc(L.slice(0,3).map(function(i){return i.n}).join(' · '))+'</small></button>':''}).join('');
     var TP=I.filter(function(i){return i.tp}).sort(function(a,b){return a.tp-b.tp});
     $('one').hidden=!TP.length;
     $('feat').innerHTML=TP.map(function(i){return '<li><button type="button" data-open="'+i.id+'"><span class="no">'+i.tp+'</span><span class="bd"><b>'+esc(i.n)+'</b>'+(i.t?'<span class="tn">'+esc(i.t)+'</span>':'')+'<small>'+esc(i.wy||i.o)+'</small><span class="pills"><span class="pill e'+i.e+'">'+E[i.e]+' efor</span>'+(i.fs?'<span class="pill">'+esc(i.fs)+'</span>':'')+'</span></span></button></li>'}).join('');
@@ -568,10 +676,12 @@ function boot(I){
       '<div class="head"><p class="eyebrow">'+esc(F[i.f])+'</p><h2 id="d-h">'+esc(i.n)+'</h2>'+(i.t?'<span class="tn" style="font-size:16px;margin-top:0">'+esc(i.t)+'</span>':'')+'</div>'+
       '<p class="lead" style="font-size:16.5px">'+esc(i.l||i.o)+'</p>'+
       '<div class="pills"><span class="pill e'+i.e+'">'+E[i.e]+' efor</span><span class="pill">'+esc(D[i.d])+'</span>'+i.k.split('').map(function(c){return '<span class="pill">'+esc(K[c])+'</span>'}).join('')+stat(i)+'</div>'+
+      ((i.fs||i.g||i.kp)?'<ol class="flow" aria-label="'+esc(i.n)+'">'+
+        (i.fs?'<li><span class="fh"><span class="fi">'+ICO.start+'</span><span class="fl-l">İlk adım</span></span><p>'+esc(i.fs)+'</p></li>':'')+
+        (i.g?'<li><span class="fh"><span class="fi">'+ICO.goal+'</span><span class="fl-l">Hedef</span></span><p>'+esc(i.g)+'</p></li>':'')+
+        (i.kp?'<li><span class="fh"><span class="fi">'+ICO.kpi+'</span><span class="fl-l">Asıl ölçüt</span></span><p>'+esc(i.kp)+'</p></li>':'')+
+      '</ol>':'')+
       '<dl class="kv">'+
-        (i.g?'<div><dt>Hedef</dt><dd>'+esc(i.g)+'</dd></div>':'')+
-        (i.fs?'<div><dt>İlk adım</dt><dd>'+esc(i.fs)+'</dd></div>':'')+
-        (i.kp?'<div><dt>Asıl ölçüt</dt><dd>'+esc(i.kp)+'</dd></div>':'')+
         '<div><dt>'+(i.v?(i.vn?'Not':'Var olanla ilişkisi'):'Türü')+'</dt><dd>'+esc(i.v||'Yeni fikir')+'</dd></div>'+
       '</dl>';
     h+='<div class="blk"><span class="lbl">Öncelik</span><div class="pills">'+tpill(i)+'<span class="pill">'+esc(QN[i.pq])+'</span><span class="pill">Etki: '+esc(IM[i.im])+'</span>'+i.hd.map(function(c){return G[c]?'<span class="pill">'+esc(G[c])+'</span>':''}).join('')+'</div><p class="note">'+esc(i.wy||QD[i.pq])+'</p></div>';
@@ -696,6 +806,11 @@ function boot(I){
   $('cmp').addEventListener('click',function(ev){if(ev.target===this) this.close()});
   (function(){var m0=document.documentElement.getAttribute('data-fs')==='light'?'light':'dark'; try{if(localStorage.getItem('fs-theme')==='light') m0='light'}catch(e){} setTheme(m0)})();
   $('theme').addEventListener('click',function(){setTheme(document.documentElement.getAttribute('data-fs')==='light'?'dark':'light')});
+  $('harita').addEventListener('click',function(ev){var g=ev.target.closest('[data-mk]'), b=ev.target.closest('[data-mgo],[data-mx]');
+    if(b&&b.dataset.mgo){st.k=b.dataset.mgo; draw(); drawViz(); go('raf'); return}
+    if(b&&b.dataset.mx){mapSel=''; mapInfo(); return}
+    if(g&&!$('mapw').dataset.nc){mapSel=mapSel===g.dataset.mk?'':g.dataset.mk; mapInfo()}});
+  $('harita').addEventListener('keydown',function(ev){var g=ev.target.closest&&ev.target.closest('[data-mk]'); if(g&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault(); mapSel=mapSel===g.dataset.mk?'':g.dataset.mk; mapInfo()}});
   window.addEventListener('hashchange',onNav); window.addEventListener('popstate',onNav);
   $('skip').addEventListener('click',function(ev){ev.preventDefault(); var hd=document.querySelector('.wrap [data-view="'+view+'"] h1,.wrap [data-view="'+view+'"] h2'); if(hd){hd.setAttribute('tabindex','-1'); try{hd.focus()}catch(e){}}});
   (function(){var tt=$('totop'), tk=function(){tt.classList.toggle('on',(window.scrollY||window.pageYOffset||0)>900)}; window.addEventListener('scroll',tk,{passive:true}); tk();

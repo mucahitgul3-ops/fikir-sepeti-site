@@ -302,6 +302,60 @@ button.stat:hover::after,button.stat:focus-visible::after{opacity:1}
 .quick button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--ink)}
 .quick button[aria-pressed="true"] b{color:var(--ink)}
 .empty .btn{margin-top:12px}
+/* fikir yol şeridi ve tema simgeleri */
+.flow{list-style:none;margin:18px 0 6px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));grid-auto-flow:column;gap:16px}
+.flow li{position:relative;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px 14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.flow li:not(:last-child)::after{content:"";position:absolute;right:-12px;top:50%;width:9px;height:9px;border-top:2px solid var(--sky);border-right:2px solid var(--sky);transform:translateY(-50%) rotate(45deg);z-index:1}
+.flow .fh{display:flex;align-items:center;gap:9px}
+.flow .fi{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--sky);color:var(--ink);display:grid;place-items:center}
+.flow .fi svg{width:17px;height:17px}
+.flow .fl-l{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}
+.flow p{font-size:14px;line-height:1.5;margin:0;color:var(--fg)}
+@media (max-width:700px){.flow{grid-auto-flow:row;grid-template-columns:1fr}.flow li:not(:last-child)::after{right:auto;left:28px;top:auto;bottom:-12px;transform:rotate(135deg)}}
+.tt .ti{width:36px;height:36px;border-radius:11px;background:var(--skysoft);color:var(--sky);display:grid;place-items:center;margin-bottom:2px}
+.tt:hover .ti{background:var(--sky);color:var(--ink)}
+
+/* fikir haritası */
+#harita .mapgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:22px;align-items:center}
+@media (max-width:860px){#harita .mapgrid{grid-template-columns:1fr}}
+.mapw{position:relative;border:1px solid var(--line);border-radius:20px;background:var(--surface);overflow:hidden}
+.mapw svg{display:block;width:100%;height:auto;position:relative}
+.mapw .mapcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mapw .nd{touch-action:none}.mapw.drag .nd{cursor:grabbing}
+.mapw .nd circle{cursor:grab}
+.mapw .ln{stroke:var(--sky);stroke-linecap:round;fill:none;opacity:.32;transition:opacity .2s,stroke-width .2s}
+.mapw .sp{stroke:var(--line2);stroke-dasharray:3 6;fill:none}
+.mapw .nd circle{fill:var(--surface2);stroke:var(--sky);stroke-width:2;transition:fill .2s}
+.mapw .nd{cursor:pointer;outline:none}
+.mapw .nd text{fill:var(--fg);font-weight:800;font-size:17px;text-anchor:middle;pointer-events:none}
+.mapw .nd .n{fill:var(--sky);font-family:var(--mono);font-size:14px;font-weight:600}
+.mapw .nd:hover circle,.mapw .nd:focus-visible circle,.mapw .nd.on circle{stroke-width:4}
+.mapw .nd:focus-visible circle{stroke-width:4}
+.mapw .ctr .core{fill:var(--sky)}
+.mapw .ctr .hl{fill:#fff;opacity:.16}
+.mapw .ctr .inner{fill:none;stroke:var(--ink);stroke-opacity:.28;stroke-width:1.5}
+.mapw .ctr .pulse{fill:none;stroke:var(--sky);stroke-width:2}
+.mapw .ctr .ring{fill:none;stroke:var(--sky);stroke-opacity:.55;stroke-width:1.5;stroke-dasharray:2 8}
+.mapw .ctr .sat{fill:var(--sky)}
+.mapw .ctr .core.lg{fill:#2A2B61;stroke:var(--sky);stroke-width:2.5}
+.mapw .ctr .inner.lg{stroke:#2EA8D3;stroke-opacity:.35}
+.mapw .ctr image{pointer-events:none}
+.mapw .fl{fill:var(--sky);pointer-events:none}
+.mapw.sel .fl{opacity:.15}
+.mapw .ctr text{fill:var(--ink);text-anchor:middle;pointer-events:none}
+.mapw .ctr .t1{font-family:var(--mono);font-size:11px;letter-spacing:.32em;font-weight:600;opacity:.85}
+.mapw .ctr .t2{font-size:19px;font-weight:900;letter-spacing:-.01em}
+.mapw.sel .ln{opacity:.08}.mapw.sel .ln.on{opacity:.85}
+.mapw.sel .nd:not(.on):not(.nb) circle{stroke:var(--line2)}.mapw.sel .nd:not(.on):not(.nb) text{opacity:.5}
+@media (max-width:600px){.mapw .nd text{font-size:31px}.mapw .nd .n{font-size:24px}.mapw .ctr .t1{font-size:15px}.mapw .ctr .t2{font-size:27px}}
+.mapinfo{display:flex;flex-direction:column;gap:12px}
+.mapinfo h3{font-size:22px;line-height:1.15}
+.mapinfo p{color:var(--muted);line-height:1.55}
+.mapinfo .msgs{display:flex;flex-direction:column;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.mapinfo .msgs li{display:flex;gap:10px;align-items:baseline;line-height:1.45}
+.mapinfo .msgs li:before{content:"";flex:0 0 8px;height:8px;border-radius:50%;background:var(--sky);transform:translateY(-1px)}
+.mapinfo .acts{display:flex;gap:8px;flex-wrap:wrap}
+
 #cmp{width:min(1100px,calc(100vw - 24px))}
 .hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
 .cmpw{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
